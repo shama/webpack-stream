@@ -1,6 +1,6 @@
 {
   "name": "gulp-webpack",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "webpack",
   "license": "MIT",
   "repository": "sindresorhus/gulp-webpack",
