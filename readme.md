@@ -1,5 +1,69 @@
-# [gulp](https://github.com/wearefractal/gulp)-webpack
+# [gulp](https://github.com/wearefractal/gulp)-webpack [![Build Status](http://img.shields.io/travis/shama/gulp-webpack.svg)](https://travis-ci.org/shama/gulp-webpack)
 
-> No need for a gulp plugin. Just use webpack directly.
+[webpack](https://github.com/webpack/webpack) plugin for [gulp](https://github.com/gulpjs/gulp)
 
-See [example gulpfile](https://github.com/webpack/webpack-with-common-libs/blob/master/gulpfile.js).
+## Usage
+
+```js
+var gulp = require('gulp');
+var webpack = require('gulp-webpack');
+gulp.task('default', function() {
+  return gulp.src('src/entry.js')
+    .pipe(webpack())
+    .pipe(gulp.dest('dist/'));
+});
+```
+
+The above will compile `src/entry.js` into assets with webpack into `dist/` with the output filename of `[hash].js` (webpack generated hash of the build).
+
+You can pass webpack options in with the first argument:
+
+```js
+return gulp.src('src/entry.js')
+  .pipe(webpack({
+    module: {
+      loaders: [
+        { test: /\.css$/, loader: 'style!css' },
+      ],
+    },
+  }))
+  .pipe(gulp.dest('dist/'));
+```
+
+Or just pass in your `webpack.config.js`:
+
+```js
+return gulp.src('src/entry.js')
+  .pipe(webpack( require('./webpack.config.js') ))
+  .pipe(gulp.dest('dist/'));
+```
+
+If you would like to use a different version of webpack than the one this plugin uses, pass in an optional 2nd argument:
+
+```js
+var gulp = require('gulp');
+var webpack = require('webpack');
+var gulpWebpack = require('gulp-webpack');
+gulp.task('default', function() {
+  return gulp.src('src/entry.js')
+    .pipe(gulpWebpack({}, webpack))
+    .pipe(gulp.dest('dist/'));
+});
+```
+
+Pass in 3rd argument if you want to access the stats outputted from webpack when the compilation is done:
+
+
+```js
+var gulp = require('gulp');
+var webpack = require('gulp-webpack');
+gulp.task('default', function() {
+  return gulp.src('src/entry.js')
+    .pipe(gulpWebpack({
+      /* config */
+    }, null, function(err, stats) {
+      /* Use stats to do more things if needed */
+    }))
+    .pipe(gulp.dest('dist/'));
+});
+```
