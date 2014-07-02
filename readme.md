@@ -2,6 +2,8 @@
 
 [webpack](https://github.com/webpack/webpack) plugin for [gulp](https://github.com/gulpjs/gulp)
 
+[![NPM](https://nodei.co/npm/gulp-webpack.png?downloads=true)](https://nodei.co/npm/gulp-webpack/)
+
 ## Usage
 
 ```js
@@ -67,3 +69,10 @@ gulp.task('default', function() {
     .pipe(gulp.dest('dist/'));
 });
 ```
+
+## Release History
+* 0.1.0 - Initial release
+
+## License
+Copyright (c) 2014 Kyle Robinson Young  
+Licensed under the MIT license.
