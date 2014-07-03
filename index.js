@@ -33,7 +33,8 @@ module.exports = function(options, wp, done) {
 
   var webpack = wp || require('webpack');
   var entry = [];
-  return through(function(file) {
+
+  var stream = through(function(file) {
     entry.push(file.path);
   }, function() {
     var self = this;
@@ -64,4 +65,11 @@ module.exports = function(options, wp, done) {
       callback();
     });
   });
+
+  // If entry point manually specified, trigger that
+  if (options.entry) {
+    stream.end();
+  }
+
+  return stream;
 };
