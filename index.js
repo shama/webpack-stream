@@ -48,9 +48,14 @@ module.exports = function(options, wp, done) {
       if (err) {
         self.emit('error', new gutil.PluginError(PLUGIN_NAME, err.message));
       }
-      self.queue(null);
+      if (!options.watch) self.queue(null);
       done(err, stats);
     });
+
+    // In watch mode webpack returns a wrapper object so we need to get
+    // the underlying compiler
+    if (options.watch) compiler = compiler.compiler;
+
     var fs = compiler.outputFileSystem = new MemoryFileSystem();
     compiler.plugin('after-emit', function(compilation, callback) {
       Object.keys(compilation.assets).forEach(function(outname) {
