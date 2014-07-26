@@ -4,6 +4,7 @@ var gutil = require('gulp-util');
 var File = require('vinyl');
 var MemoryFileSystem = require('memory-fs');
 var through = require('through');
+var ProgressPlugin = require("webpack/lib/ProgressPlugin");
 
 var PLUGIN_NAME = 'gulp-webpack';
 
@@ -61,6 +62,14 @@ module.exports = function(options, wp, done) {
     // In watch mode webpack returns a wrapper object so we need to get
     // the underlying compiler
     if (options.watch) compiler = compiler.compiler;
+
+    if (options.progress) {
+      compiler.apply(new ProgressPlugin(function(percentage, msg) {
+        percentage = Math.floor(percentage * 100);
+        msg = percentage + "% " + msg;
+        gutil.log('Webpack', msg);
+      }));
+    }
 
     var fs = compiler.outputFileSystem = new MemoryFileSystem();
     compiler.plugin('after-emit', function(compilation, callback) {
