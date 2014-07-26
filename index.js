@@ -24,14 +24,14 @@ module.exports = function(options, wp, done) {
         }));
       } else {
         gutil.log(stats.toString({
-          colors: true,
-          hash: false,
-          timings: false,
-          assets: true,
-          chunks: false,
-          chunkModules: false,
-          modules: false,
-          children: true,
+          colors:       (options.stats && options.stats.colors)       || true,
+          hash:         (options.stats && options.stats.hash)         || false,
+          timings:      (options.stats && options.stats.timings)      || false,
+          assets:       (options.stats && options.stats.assets)       || true,
+          chunks:       (options.stats && options.stats.chunks)       || false,
+          chunkModules: (options.stats && options.stats.chunkModules) || false,
+          modules:      (options.stats && options.stats.modules)      || false,
+          children:     (options.stats && options.stats.children)     || true,
         }));
       }
     }
