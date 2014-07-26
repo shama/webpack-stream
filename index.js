@@ -34,9 +34,6 @@ module.exports = function(options, wp, done) {
   }
 
   var webpack = wp || require('webpack');
-  if (compiler === null) {
-    compiler = webpack(options);
-  }
   var entry = [];
 
   var stream = through(function(file) {
@@ -57,6 +54,9 @@ module.exports = function(options, wp, done) {
       done(err, stats);
     };
 
+    if (compiler === null) {
+      compiler = webpack(options);
+    }
     if (options.watch) {
       if (!options.watching) {
         compiler.watch(options.watchDelay || 200, handler);
