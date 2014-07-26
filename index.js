@@ -4,6 +4,7 @@ var gutil = require('gulp-util');
 var File = require('vinyl');
 var MemoryFileSystem = require('memory-fs');
 var through = require('through');
+var ProgressPlugin = require("webpack/lib/ProgressPlugin");
 
 var PLUGIN_NAME = 'gulp-webpack';
 
@@ -24,14 +25,14 @@ module.exports = function(options, wp, done) {
         }));
       } else {
         gutil.log(stats.toString({
-          colors: true,
-          hash: false,
-          timings: false,
-          assets: true,
-          chunks: false,
-          chunkModules: false,
-          modules: false,
-          children: true,
+          colors:       (options.stats && options.stats.colors)       || true,
+          hash:         (options.stats && options.stats.hash)         || false,
+          timings:      (options.stats && options.stats.timings)      || false,
+          assets:       (options.stats && options.stats.assets)       || true,
+          chunks:       (options.stats && options.stats.chunks)       || false,
+          chunkModules: (options.stats && options.stats.chunkModules) || false,
+          modules:      (options.stats && options.stats.modules)      || false,
+          children:     (options.stats && options.stats.children)     || true,
         }));
       }
     }
@@ -56,22 +57,36 @@ module.exports = function(options, wp, done) {
       }
       if (!options.watch) self.queue(null);
       done(err, stats);
+      if (options.watch && !options.quiet) {
+        gutil.log("Webpack is watching for changes");
+      }
     });
 
     // In watch mode webpack returns a wrapper object so we need to get
     // the underlying compiler
     if (options.watch) compiler = compiler.compiler;
 
+    if (options.progress) {
+      compiler.apply(new ProgressPlugin(function(percentage, msg) {
+        percentage = Math.floor(percentage * 100);
+        msg = percentage + '% ' + msg;
+        if (percentage < 10) msg = ' ' + msg;
+        gutil.log('Webpack', msg);
+      }));
+    }
+
     var fs = compiler.outputFileSystem = new MemoryFileSystem();
     compiler.plugin('after-emit', function(compilation, callback) {
       Object.keys(compilation.assets).forEach(function(outname) {
-        var path = fs.join(compiler.outputPath, outname);
-        var contents = fs.readFileSync(path);
-        self.queue(new File({
-          base: compiler.outputPath,
-          path: path,
-          contents: contents,
-        }));
+        if (compilation.assets[outname].emitted) {
+          var path = fs.join(compiler.outputPath, outname);
+          var contents = fs.readFileSync(path);
+          self.queue(new File({
+            base: compiler.outputPath,
+            path: path,
+            contents: contents,
+          }));
+        }
       });
       callback();
     });
@@ -79,7 +94,7 @@ module.exports = function(options, wp, done) {
 
   // If entry point manually specified, trigger that
   if (options.entry) {
-    stream.end();
+//    stream.end();
   }
 
   return stream;
