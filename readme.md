@@ -71,6 +71,7 @@ gulp.task('default', function() {
 ```
 
 ## Release History
+* 0.2.0 - Support for `watch` mode (@ampedandwired).
 * 0.1.0 - Initial release
 
 ## License
