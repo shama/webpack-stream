@@ -10,8 +10,14 @@ var PLUGIN_NAME = 'gulp-webpack';
 module.exports = function(options, wp, done) {
   options = options || {};
   if (typeof done !== 'function') {
+    var callingDone = false;
     done = function(err, stats) {
-      if (options.quiet) return;
+      if (options.quiet || callingDone) return;
+      // Debounce output a little for when in watch mode
+      if (options.watch) {
+        callingDone = true;
+        setTimeout(function() { callingDone = false; }, 500);
+      }
       if (options.verbose) {
         gutil.log(stats.toString({
           colors: true,
