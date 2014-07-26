@@ -66,7 +66,8 @@ module.exports = function(options, wp, done) {
     if (options.progress) {
       compiler.apply(new ProgressPlugin(function(percentage, msg) {
         percentage = Math.floor(percentage * 100);
-        msg = percentage + "% " + msg;
+        msg = percentage + '% ' + msg;
+        if (percentage < 10) msg = ' ' + msg;
         gutil.log('Webpack', msg);
       }));
     }
