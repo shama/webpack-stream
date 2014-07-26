@@ -68,15 +68,13 @@ module.exports = function(options, wp, done) {
     var fs = compiler.outputFileSystem = new MemoryFileSystem();
     compiler.plugin('after-emit', function(compilation, callback) {
       Object.keys(compilation.assets).forEach(function(outname) {
-        if (compilation.assets[outname].emitted) {
-          var path = fs.join(compiler.outputPath, outname);
-          var contents = fs.readFileSync(path);
-          self.queue(new File({
-            base: compiler.outputPath,
-            path: path,
-            contents: contents,
-          }));
-        }
+        var path = fs.join(compiler.outputPath, outname);
+        var contents = fs.readFileSync(path);
+        self.queue(new File({
+          base: compiler.outputPath,
+          path: path,
+          contents: contents,
+        }));
       });
       callback();
     });
