@@ -56,6 +56,9 @@ module.exports = function(options, wp, done) {
       }
       if (!options.watch) self.queue(null);
       done(err, stats);
+      if (options.watch && !options.quiet) {
+        gutil.log("Webpack is watching for changes");
+      }
     });
 
     // In watch mode webpack returns a wrapper object so we need to get
