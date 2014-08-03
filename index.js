@@ -44,7 +44,7 @@ module.exports = function(options, wp, done) {
     entry.push(file.path);
   }, function() {
     var self = this;
-    if (entry.length < 2) entry = entry[0];
+    if (entry.length < 2) entry = entry[0] || entry;
     if (!options.entry) options.entry = entry;
     options.output = options.output || {};
     if (!options.output.path) options.output.path = process.cwd();
