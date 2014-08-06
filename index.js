@@ -41,6 +41,7 @@ module.exports = function(options, wp, done) {
   var entry = [];
 
   var stream = through(function(file) {
+    entry = entry || [];
     entry.push(file.path);
   }, function() {
     var self = this;
