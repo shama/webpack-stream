@@ -41,10 +41,18 @@ module.exports = function(options, wp, done) {
   var entry = [];
 
   var stream = through(function(file) {
+    if (file.isNull()) return;
+
     entry = entry || [];
     entry.push(file.path);
   }, function() {
     var self = this;
+
+    if (entry.length == 0) {
+      gutil.log('gulp-webpack - No files given; aborting compilation');
+      return;
+    }
+
     if (entry.length < 2) entry = entry[0] || entry;
     if (!options.entry) options.entry = entry;
     options.output = options.output || {};
