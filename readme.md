@@ -71,6 +71,7 @@ gulp.task('default', function() {
 ```
 
 ## Release History
+* 0.4.0 - Display an error message if there are no input files (@3onyc). Add message on why task is not finishing, Add ability to track compilation progress, Add ability to configure stats output via options (@kompot). Bump webpack version (@koistya).
 * 0.3.0 - Update deps (@kompot). Fixes to determining entry (@btipling and @abergs).
 * 0.2.0 - Support for `watch` mode (@ampedandwired).
 * 0.1.0 - Initial release
