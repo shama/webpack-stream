@@ -49,7 +49,19 @@ module.exports = function(options, wp, done) {
     var self = this;
 
     if (entry.length < 2) entry = entry[0] || entry;
-    if (!options.entry) options.entry = entry;
+    if (!options.entry) {
+      if (typeof options.entryName == 'function') {
+        options.entry = {};
+        if (!(entry instanceof Array)) {
+          entry = [entry];
+        }
+        entry.forEach(function(path) {
+          options.entry[options.entryName(path)] = path;
+        });
+      } else {
+        options.entry = entry;
+      }
+    }
     options.output = options.output || {};
     if (!options.output.path) options.output.path = process.cwd();
     if (!options.output.filename) options.output.filename = '[hash].js';
