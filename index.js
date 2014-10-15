@@ -48,7 +48,12 @@ module.exports = function(options, wp, done) {
   }, function() {
     var self = this;
 
-    if (entry.length < 2) entry = entry[0] || entry;
+    if (options.entryFactory) {
+      entry = options.entryFactory(entry);
+    } else {
+      if (entry.length < 2) entry = entry[0] || entry;
+    }
+
     if (!options.entry) options.entry = entry;
     options.output = options.output || {};
     if (!options.output.path) options.output.path = process.cwd();
