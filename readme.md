@@ -110,6 +110,7 @@ The above `named()` stream will add a `.named` property to the vinyl files passi
 
 
 ## Release History
+* 1.0.0 - Support named chunks pipe'd in for multiple entry points.
 * 0.4.1 - Fixed regression for multiple entry point support.
 * 0.4.0 - Display an error message if there are no input files (@3onyc). Add message on why task is not finishing, Add ability to track compilation progress, Add ability to configure stats output via options (@kompot). Bump webpack version (@koistya).
 * 0.3.0 - Update deps (@kompot). Fixes to determining entry (@btipling and @abergs).
