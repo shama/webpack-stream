@@ -70,6 +70,45 @@ gulp.task('default', function() {
 });
 ```
 
+#### Multiple Entry Points
+
+A common request is how to handle multiple entry points. You can continue to pass in an `entry` option in your typical webpack config like so:
+
+```js
+var gulp = require('gulp');
+var webpack = require('gulp-webpack');
+gulp.task('default', function() {
+  return gulp.src('src/entry.js')
+    .pipe(webpack({
+      entry: {
+        app: 'src/app.js',
+        test: 'test/test.js',
+      },
+      output: {
+        filename: '[name].js',
+      },
+    }))
+    .pipe(gulp.dest('dist/'));
+});
+```
+
+Or pipe files through a stream that names the chunks. A convenient library for this is [vinyl-named](https://github.com/shama/vinyl-named):
+
+```js
+var gulp = require('gulp');
+var webpack = require('gulp-webpack');
+var named = require('vinyl-named');
+gulp.task('default', function() {
+  return gulp.src('src/entry.js')
+    .pipe(named())
+    .pipe(webpack())
+    .pipe(gulp.dest('dist/'));
+});
+```
+
+The above `named()` stream will add a `.named` property to the vinyl files passing through. The `webpack()` stream will read those as entry points and even group entry points with common names together.
+
+
 ## Release History
 * 0.4.1 - Fixed regression for multiple entry point support.
 * 0.4.0 - Display an error message if there are no input files (@3onyc). Add message on why task is not finishing, Add ability to track compilation progress, Add ability to configure stats output via options (@kompot). Bump webpack version (@koistya).

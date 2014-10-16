@@ -40,17 +40,33 @@ module.exports = function(options, wp, done) {
 
   var webpack = wp || require('webpack');
   var entry = [];
+  var entries = Object.create(null);
 
   var stream = through(function(file) {
     if (file.isNull()) return;
-    entry = entry || [];
-    entry.push(file.path);
+    if ('named' in file) {
+      if (!Array.isArray(entries[file.named])) entries[file.named] = [];
+      entries[file.named].push(file.path);
+    } else {
+      entry = entry || [];
+      entry.push(file.path);
+    }
   }, function() {
     var self = this;
-
-    if (entry.length < 2) entry = entry[0] || entry;
-    if (!options.entry) options.entry = entry;
     options.output = options.output || {};
+
+    // Determine pipe'd in entry
+    if (Object.keys(entries).length > 0) {
+      entry = entries;
+      if (!options.output.filename) {
+        // Better output default for multiple chunks
+        options.output.filename = '[name].js'
+      }
+    } else if (entry.length < 2) {
+      entry = entry[0] || entry;
+    }
+
+    if (!options.entry) options.entry = entry;
     if (!options.output.path) options.output.path = process.cwd();
     if (!options.output.filename) options.output.filename = '[hash].js';
 
