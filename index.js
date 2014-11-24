@@ -123,3 +123,8 @@ module.exports = function(options, wp, done) {
 
   return stream;
 };
+
+// Expose webpack if asked
+Object.defineProperty(module.exports, 'webpack', {
+  get: function() { return require('webpack'); }
+});
