@@ -4,7 +4,7 @@ var gutil = require('gulp-util');
 var File = require('vinyl');
 var MemoryFileSystem = require('memory-fs');
 var through = require('through');
-var ProgressPlugin = require("webpack/lib/ProgressPlugin");
+var ProgressPlugin = require('webpack/lib/ProgressPlugin');
 
 var PLUGIN_NAME = 'gulp-webpack';
 
@@ -13,7 +13,10 @@ module.exports = function(options, wp, done) {
   if (typeof done !== 'function') {
     var callingDone = false;
     done = function(err, stats) {
-      if (options.quiet || callingDone) return;
+      stats = stats || {};
+      if (options.quiet || callingDone) {
+        return;
+      }
       // Debounce output a little for when in watch mode
       if (options.watch) {
         callingDone = true;
@@ -43,9 +46,13 @@ module.exports = function(options, wp, done) {
   var entries = Object.create(null);
 
   var stream = through(function(file) {
-    if (file.isNull()) return;
+    if (file.isNull()) {
+      return;
+    }
     if ('named' in file) {
-      if (!Array.isArray(entries[file.named])) entries[file.named] = [];
+      if (!Array.isArray(entries[file.named])) {
+        entries[file.named] = [];
+      }
       entries[file.named].push(file.path);
     } else {
       entry = entry || [];
@@ -66,9 +73,9 @@ module.exports = function(options, wp, done) {
       entry = entry[0] || entry;
     }
 
-    if (!options.entry) options.entry = entry;
-    if (!options.output.path) options.output.path = process.cwd();
-    if (!options.output.filename) options.output.filename = '[hash].js';
+    options.entry           = options.entry           || entry;
+    options.output.path     = options.output.path     || process.cwd();
+    options.output.filename = options.output.filename || '[hash].js';
 
     if (!options.entry) {
       gutil.log('gulp-webpack - No files given; aborting compilation');
@@ -77,18 +84,22 @@ module.exports = function(options, wp, done) {
 
     var compiler = webpack(options, function(err, stats) {
       if (err) {
-        self.emit('error', new gutil.PluginError(PLUGIN_NAME, err.message));
+        self.emit('error', new gutil.PluginError(PLUGIN_NAME, err));
       }
-      if (!options.watch) self.queue(null);
+      if (!options.watch) {
+        self.queue(null);
+      }
       done(err, stats);
       if (options.watch && !options.quiet) {
-        gutil.log("Webpack is watching for changes");
+        gutil.log('Webpack is watching for changes');
       }
     });
 
     // In watch mode webpack returns a wrapper object so we need to get
     // the underlying compiler
-    if (options.watch) compiler = compiler.compiler;
+    if (options.watch) {
+      compiler = compiler.compiler;
+    }
 
     if (options.progress) {
       compiler.apply(new ProgressPlugin(function(percentage, msg) {
@@ -126,5 +137,7 @@ module.exports = function(options, wp, done) {
 
 // Expose webpack if asked
 Object.defineProperty(module.exports, 'webpack', {
-  get: function() { return require('webpack'); }
+  get: function() {
+    return require('webpack');
+  }
 });
