@@ -36,6 +36,12 @@ module.exports = function(options, wp, done) {
           chunkModules: (options.stats && options.stats.chunkModules) || false,
           modules:      (options.stats && options.stats.modules)      || false,
           children:     (options.stats && options.stats.children)     || true,
+          version:      (options.stats && options.stats.version)      || true,
+          cached:       (options.stats && options.stats.cached)       || false,
+          cachedAssets: (options.stats && options.stats.cachedAssets) || false,
+          reasons:      (options.stats && options.stats.reasons)      || false,
+          source:       (options.stats && options.stats.source)       || false,
+          errorDetails: (options.stats && options.stats.errorDetails) || false,
         }));
       }
     }
