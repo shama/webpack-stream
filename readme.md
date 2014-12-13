@@ -110,6 +110,7 @@ The above `named()` stream will add a `.named` property to the vinyl files passi
 
 
 ## Release History
+* 1.1.1 - Add additional stats to default logging (@mdreizin).
 * 1.1.0 - Exposes internal webpack if asked via `require('gulp-webpack').webpack`
 * 1.0.0 - Support named chunks pipe'd in for multiple entry points.
 * 0.4.1 - Fixed regression for multiple entry point support.
