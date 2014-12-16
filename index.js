@@ -6,22 +6,22 @@ var MemoryFileSystem = require('memory-fs');
 var through = require('through');
 var ProgressPlugin = require('webpack/lib/ProgressPlugin');
 
-var PLUGIN_NAME = 'gulp-webpack',
-    defaultStatsOptions = {
-      colors: true,
-      hash: false,
-      timings: false,
-      chunks: false,
-      chunkModules: false,
-      modules: false,
-      children: true,
-      version: true,
-      cached: false,
-      cachedAssets: false,
-      reasons: false,
-      source: false,
-      errorDetails: false
-    };
+var PLUGIN_NAME = 'gulp-webpack';
+var defaultStatsOptions = {
+  colors: true,
+  hash: false,
+  timings: false,
+  chunks: false,
+  chunkModules: false,
+  modules: false,
+  children: true,
+  version: true,
+  cached: false,
+  cachedAssets: false,
+  reasons: false,
+  source: false,
+  errorDetails: false,
+};
 
 module.exports = function(options, wp, done) {
   options = options || {};
