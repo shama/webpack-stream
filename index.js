@@ -6,7 +6,22 @@ var MemoryFileSystem = require('memory-fs');
 var through = require('through');
 var ProgressPlugin = require('webpack/lib/ProgressPlugin');
 
-var PLUGIN_NAME = 'gulp-webpack';
+var PLUGIN_NAME = 'gulp-webpack',
+    defaultStatsOptions = {
+      colors: true,
+      hash: false,
+      timings: false,
+      chunks: false,
+      chunkModules: false,
+      modules: false,
+      children: true,
+      version: true,
+      cached: false,
+      cachedAssets: false,
+      reasons: false,
+      source: false,
+      errorDetails: false
+    };
 
 module.exports = function(options, wp, done) {
   options = options || {};
@@ -27,22 +42,15 @@ module.exports = function(options, wp, done) {
           colors: true,
         }));
       } else {
-        gutil.log(stats.toString({
-          colors:       (options.stats && options.stats.colors)       || true,
-          hash:         (options.stats && options.stats.hash)         || false,
-          timings:      (options.stats && options.stats.timings)      || false,
-          assets:       (options.stats && options.stats.assets)       || true,
-          chunks:       (options.stats && options.stats.chunks)       || false,
-          chunkModules: (options.stats && options.stats.chunkModules) || false,
-          modules:      (options.stats && options.stats.modules)      || false,
-          children:     (options.stats && options.stats.children)     || true,
-          version:      (options.stats && options.stats.version)      || true,
-          cached:       (options.stats && options.stats.cached)       || false,
-          cachedAssets: (options.stats && options.stats.cachedAssets) || false,
-          reasons:      (options.stats && options.stats.reasons)      || false,
-          source:       (options.stats && options.stats.source)       || false,
-          errorDetails: (options.stats && options.stats.errorDetails) || false,
-        }));
+        var statsOptions = options && options.stats || {};
+
+        Object.keys(defaultStatsOptions).forEach(function(key) {
+          if (typeof statsOptions[key] === 'undefined') {
+            statsOptions[key] = defaultStatsOptions[key];
+          }
+        });
+
+        gutil.log(stats.toString(statsOptions));
       }
     }
   }
