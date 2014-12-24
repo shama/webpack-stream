@@ -18,11 +18,12 @@ gulp.task('default', function() {
 
 The above will compile `src/entry.js` into assets with webpack into `dist/` with the output filename of `[hash].js` (webpack generated hash of the build).
 
-You can pass webpack options in with the first argument:
+You can pass webpack options in with the first argument, including `watch` which will greatly increase compilation times:
 
 ```js
 return gulp.src('src/entry.js')
   .pipe(webpack({
+    watch: true,
     module: {
       loaders: [
         { test: /\.css$/, loader: 'style!css' },
@@ -121,5 +122,5 @@ The above `named()` stream will add a `.named` property to the vinyl files passi
 * 0.1.0 - Initial release
 
 ## License
-Copyright (c) 2014 Kyle Robinson Young  
+Copyright (c) 2014 Kyle Robinson Young
 Licensed under the MIT license.
