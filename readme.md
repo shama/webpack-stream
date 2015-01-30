@@ -111,6 +111,7 @@ The above `named()` stream will add a `.named` property to the vinyl files passi
 
 
 ## Release History
+* 1.2.0 - Updating to webpack >= 1.5, vinyl >= 0.4, memory-fs >= 0.2.
 * 1.1.2 - Fixes to default stats for logging (@mdreizin).
 * 1.1.1 - Add additional stats to default logging (@mdreizin).
 * 1.1.0 - Exposes internal webpack if asked via `require('gulp-webpack').webpack`
