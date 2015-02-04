@@ -8,7 +8,7 @@ var ProgressPlugin = require('webpack/lib/ProgressPlugin');
 
 var PLUGIN_NAME = 'gulp-webpack';
 var defaultStatsOptions = {
-  colors: true,
+  colors: gutil.colors.supportsColor,
   hash: false,
   timings: false,
   chunks: false,
