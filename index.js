@@ -39,7 +39,7 @@ module.exports = function(options, wp, done) {
       }
       if (options.verbose) {
         gutil.log(stats.toString({
-          colors: true,
+          colors: gutil.colors.supportsColor,
         }));
       } else {
         var statsOptions = options && options.stats || {};
