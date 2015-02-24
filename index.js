@@ -90,6 +90,7 @@ module.exports = function(options, wp, done) {
     options.entry           = options.entry           || entry;
     options.output.path     = options.output.path     || process.cwd();
     options.output.filename = options.output.filename || '[hash].js';
+    entry = [];
 
     if (!options.entry) {
       gutil.log('gulp-webpack - No files given; aborting compilation');
