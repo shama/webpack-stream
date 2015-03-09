@@ -106,7 +106,7 @@ module.exports = function(options, wp, done) {
       }
       done(err, stats);
       if (options.watch && !options.quiet) {
-        gutil.log('Webpack is watching for changes');
+        gutil.log('webpack is watching for changes');
       }
     });
 
@@ -121,7 +121,7 @@ module.exports = function(options, wp, done) {
         percentage = Math.floor(percentage * 100);
         msg = percentage + '% ' + msg;
         if (percentage < 10) msg = ' ' + msg;
-        gutil.log('Webpack', msg);
+        gutil.log('webpack', msg);
       }));
     }
 
