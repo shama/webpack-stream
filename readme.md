@@ -125,5 +125,5 @@ The above `named()` stream will add a `.named` property to the vinyl files passi
 * 0.1.0 - Initial release
 
 ## License
-Copyright (c) 2014 Kyle Robinson Young  
+Copyright (c) 2015 Kyle Robinson Young  
 Licensed under the MIT license.
