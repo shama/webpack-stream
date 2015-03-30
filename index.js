@@ -133,7 +133,7 @@ module.exports = function(options, wp, done) {
           var contents = fs.readFileSync(path.split("?")[0]);
           self.queue(new File({
             base: compiler.outputPath,
-            path: path,
+            path: path.split("?")[0],
             contents: contents,
           }));
         }
