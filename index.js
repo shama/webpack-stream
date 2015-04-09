@@ -130,10 +130,13 @@ module.exports = function(options, wp, done) {
       Object.keys(compilation.assets).forEach(function(outname) {
         if (compilation.assets[outname].emitted) {
           var path = fs.join(compiler.outputPath, outname);
-          var contents = fs.readFileSync(path.split("?")[0]);
+          if (path.indexOf('?') !== -1) {
+            path = path.split('?')[0];
+          }
+          var contents = fs.readFileSync(path);
           self.queue(new File({
             base: compiler.outputPath,
-            path: path.split("?")[0],
+            path: path,
             contents: contents,
           }));
         }
