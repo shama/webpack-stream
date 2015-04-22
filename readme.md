@@ -111,6 +111,7 @@ The above `named()` stream will add a `.named` property to the vinyl files passi
 
 
 ## Release History
+* 1.4.0 - Update webpack to 1.8.x (@Zolmeister).
 * 1.3.2 - Fix another place with ? in name (@raphaelluchini).
 * 1.3.1 - Fix for paths with ? in their name (@raphaelluchini).
 * 1.3.0 - Updating to webpack >= 1.7.
