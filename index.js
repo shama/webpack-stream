@@ -23,11 +23,11 @@ var defaultStatsOptions = {
   errorDetails: false,
 };
 
-module.exports = function(options, wp, done) {
+module.exports = function (options, wp, done) {
   options = options || {};
   if (typeof done !== 'function') {
     var callingDone = false;
-    done = function(err, stats) {
+    done = function (err, stats) {
       stats = stats || {};
       if (options.quiet || callingDone) {
         return;
@@ -35,7 +35,9 @@ module.exports = function(options, wp, done) {
       // Debounce output a little for when in watch mode
       if (options.watch) {
         callingDone = true;
-        setTimeout(function() { callingDone = false; }, 500);
+        setTimeout(function () {
+          callingDone = false;
+        }, 500);
       }
       if (options.verbose) {
         gutil.log(stats.toString({
@@ -44,7 +46,7 @@ module.exports = function(options, wp, done) {
       } else {
         var statsOptions = options && options.stats || {};
 
-        Object.keys(defaultStatsOptions).forEach(function(key) {
+        Object.keys(defaultStatsOptions).forEach(function (key) {
           if (typeof statsOptions[key] === 'undefined') {
             statsOptions[key] = defaultStatsOptions[key];
           }
@@ -59,7 +61,7 @@ module.exports = function(options, wp, done) {
   var entry = [];
   var entries = Object.create(null);
 
-  var stream = through(function(file) {
+  var stream = through(function (file) {
     if (file.isNull()) {
       return;
     }
@@ -72,7 +74,7 @@ module.exports = function(options, wp, done) {
       entry = entry || [];
       entry.push(file.path);
     }
-  }, function() {
+  }, function () {
     var self = this;
     options.output = options.output || {};
 
@@ -87,17 +89,17 @@ module.exports = function(options, wp, done) {
       entry = entry[0] || entry;
     }
 
-    options.entry           = options.entry           || entry;
-    options.output.path     = options.output.path     || process.cwd();
+    options.entry = options.entry || entry;
+    options.output.path = options.output.path || process.cwd();
     options.output.filename = options.output.filename || '[hash].js';
     entry = [];
 
-    if (!options.entry) {
+    if (!options.entry || options.entry.length < 1) {
       gutil.log('gulp-webpack - No files given; aborting compilation');
-      return;
+      return  self.emit('end');
     }
 
-    var compiler = webpack(options, function(err, stats) {
+    var compiler = webpack(options, function (err, stats) {
       if (err) {
         self.emit('error', new gutil.PluginError(PLUGIN_NAME, err));
       }
@@ -117,7 +119,7 @@ module.exports = function(options, wp, done) {
     }
 
     if (options.progress) {
-      compiler.apply(new ProgressPlugin(function(percentage, msg) {
+      compiler.apply(new ProgressPlugin(function (percentage, msg) {
         percentage = Math.floor(percentage * 100);
         msg = percentage + '% ' + msg;
         if (percentage < 10) msg = ' ' + msg;
@@ -126,8 +128,8 @@ module.exports = function(options, wp, done) {
     }
 
     var fs = compiler.outputFileSystem = new MemoryFileSystem();
-    compiler.plugin('after-emit', function(compilation, callback) {
-      Object.keys(compilation.assets).forEach(function(outname) {
+    compiler.plugin('after-emit', function (compilation, callback) {
+      Object.keys(compilation.assets).forEach(function (outname) {
         if (compilation.assets[outname].emitted) {
           var path = fs.join(compiler.outputPath, outname);
           if (path.indexOf('?') !== -1) {
@@ -155,7 +157,7 @@ module.exports = function(options, wp, done) {
 
 // Expose webpack if asked
 Object.defineProperty(module.exports, 'webpack', {
-  get: function() {
+  get: function () {
     return require('webpack');
   }
 });
