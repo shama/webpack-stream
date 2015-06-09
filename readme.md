@@ -1,14 +1,14 @@
-# [gulp](https://github.com/wearefractal/gulp)-webpack [![Build Status](http://img.shields.io/travis/shama/gulp-webpack.svg)](https://travis-ci.org/shama/gulp-webpack)
+# webpack-stream [![Build Status](http://img.shields.io/travis/shama/webpack-stream.svg)](https://travis-ci.org/shama/webpack-stream)
 
-[webpack](https://github.com/webpack/webpack) plugin for [gulp](https://github.com/gulpjs/gulp)
+Run [webpack](https://github.com/webpack/webpack) as a stream to conveniently integrate with gulp.
 
-[![NPM](https://nodei.co/npm/gulp-webpack.png?downloads=true)](https://nodei.co/npm/gulp-webpack/)
+[![NPM](https://nodei.co/npm/webpack-stream.png?downloads=true)](https://nodei.co/npm/webpack-stream/)
 
 ## Usage
 
 ```js
 var gulp = require('gulp');
-var webpack = require('gulp-webpack');
+var webpack = require('webpack-stream');
 gulp.task('default', function() {
   return gulp.src('src/entry.js')
     .pipe(webpack())
@@ -46,7 +46,7 @@ If you would like to use a different version of webpack than the one this plugin
 ```js
 var gulp = require('gulp');
 var webpack = require('webpack');
-var gulpWebpack = require('gulp-webpack');
+var gulpWebpack = require('webpack-stream');
 gulp.task('default', function() {
   return gulp.src('src/entry.js')
     .pipe(gulpWebpack({}, webpack))
@@ -59,7 +59,7 @@ Pass in 3rd argument if you want to access the stats outputted from webpack when
 
 ```js
 var gulp = require('gulp');
-var webpack = require('gulp-webpack');
+var webpack = require('webpack-stream');
 gulp.task('default', function() {
   return gulp.src('src/entry.js')
     .pipe(webpack({
@@ -77,7 +77,7 @@ A common request is how to handle multiple entry points. You can continue to pas
 
 ```js
 var gulp = require('gulp');
-var webpack = require('gulp-webpack');
+var webpack = require('webpack-stream');
 gulp.task('default', function() {
   return gulp.src('src/entry.js')
     .pipe(webpack({
@@ -97,7 +97,7 @@ Or pipe files through a stream that names the chunks. A convenient library for t
 
 ```js
 var gulp = require('gulp');
-var webpack = require('gulp-webpack');
+var webpack = require('webpack-stream');
 var named = require('vinyl-named');
 gulp.task('default', function() {
   return gulp.src(['src/app.js', 'test/test.js'])
@@ -110,6 +110,7 @@ gulp.task('default', function() {
 The above `named()` stream will add a `.named` property to the vinyl files passing through. The `webpack()` stream will read those as entry points and even group entry points with common names together.
 
 ## Release History
+* 2.0.0 - Rename to webpack-stream and now it's totally not a gulp plugin.
 * 1.5.0 - Update webpack to 1.9.x (@nmccready). Update other dependencies.
 * 1.4.0 - Update webpack to 1.8.x (@Zolmeister).
 * 1.3.2 - Fix another place with ? in name (@raphaelluchini).
@@ -118,7 +119,7 @@ The above `named()` stream will add a `.named` property to the vinyl files passi
 * 1.2.0 - Updating to webpack >= 1.5, vinyl >= 0.4, memory-fs >= 0.2.
 * 1.1.2 - Fixes to default stats for logging (@mdreizin).
 * 1.1.1 - Add additional stats to default logging (@mdreizin).
-* 1.1.0 - Exposes internal webpack if asked via `require('gulp-webpack').webpack`
+* 1.1.0 - Exposes internal webpack if asked via `require('webpack-stream').webpack`
 * 1.0.0 - Support named chunks pipe'd in for multiple entry points.
 * 0.4.1 - Fixed regression for multiple entry point support.
 * 0.4.0 - Display an error message if there are no input files (@3onyc). Add message on why task is not finishing, Add ability to track compilation progress, Add ability to configure stats output via options (@kompot). Bump webpack version (@koistya).

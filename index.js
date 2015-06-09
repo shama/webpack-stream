@@ -6,7 +6,6 @@ var MemoryFileSystem = require('memory-fs');
 var through = require('through');
 var ProgressPlugin = require('webpack/lib/ProgressPlugin');
 
-var PLUGIN_NAME = 'gulp-webpack';
 var defaultStatsOptions = {
   colors: gutil.colors.supportsColor,
   hash: false,
@@ -101,7 +100,7 @@ module.exports = function (options, wp, done) {
 
     var compiler = webpack(options, function (err, stats) {
       if (err) {
-        self.emit('error', new gutil.PluginError(PLUGIN_NAME, err));
+        self.emit('error', new gutil.PluginError('webpack-stream', err));
       }
       if (!options.watch) {
         self.queue(null);
