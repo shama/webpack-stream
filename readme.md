@@ -54,7 +54,9 @@ gulp.task('default', function() {
 });
 ```
 
-Pass in 3rd argument if you want to access the stats outputted from webpack when the compilation is done:
+Pass in 3rd argument if you want to access the stats outputted from webpack when the compilation is done.
+In addition, if you wish to delegate to the original done callback, you may do it via call to
+`this.webpackDone`:
 
 
 ```js
@@ -66,6 +68,9 @@ gulp.task('default', function() {
       /* config */
     }, null, function(err, stats) {
       /* Use stats to do more things if needed */
+
+      /* Call original callback if needed */
+      this.webpackDone(err, stats);
     }))
     .pipe(gulp.dest('dist/'));
 });
