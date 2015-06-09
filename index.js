@@ -25,34 +25,38 @@ var defaultStatsOptions = {
 
 module.exports = function(options, wp, done) {
   options = options || {};
-  if (typeof done !== 'function') {
-    var callingDone = false;
-    done = function(err, stats) {
-      stats = stats || {};
-      if (options.quiet || callingDone) {
-        return;
-      }
-      // Debounce output a little for when in watch mode
-      if (options.watch) {
-        callingDone = true;
-        setTimeout(function() { callingDone = false; }, 500);
-      }
-      if (options.verbose) {
-        gutil.log(stats.toString({
-          colors: gutil.colors.supportsColor,
-        }));
-      } else {
-        var statsOptions = options && options.stats || {};
 
-        Object.keys(defaultStatsOptions).forEach(function(key) {
-          if (typeof statsOptions[key] === 'undefined') {
-            statsOptions[key] = defaultStatsOptions[key];
-          }
-        });
-
-        gutil.log(stats.toString(statsOptions));
-      }
+  var callingDone = false;
+  var webpackDone = function(err, stats) {
+    stats = stats || {};
+    if (options.quiet || callingDone) {
+      return;
     }
+    // Debounce output a little for when in watch mode
+    if (options.watch) {
+      callingDone = true;
+      setTimeout(function() { callingDone = false; }, 500);
+    }
+    if (options.verbose) {
+      gutil.log(stats.toString({
+        colors: gutil.colors.supportsColor,
+      }));
+    } else {
+      var statsOptions = options && options.stats || {};
+
+      Object.keys(defaultStatsOptions).forEach(function(key) {
+        if (typeof statsOptions[key] === 'undefined') {
+          statsOptions[key] = defaultStatsOptions[key];
+        }
+      });
+
+      gutil.log(stats.toString(statsOptions));
+    }
+  };
+  if (typeof done === 'function') {
+    done = done.bind({ 'webpackDone': webpackDone });
+  } else {
+    done = webpackDone;
   }
 
   var webpack = wp || require('webpack');
