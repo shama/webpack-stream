@@ -6,7 +6,7 @@ var named = require('vinyl-named');
 
 var base = path.resolve(__dirname, 'fixtures');
 
-test('streams output assets', function(t) {
+test('streams output assets', function (t) {
   t.plan(3);
   var entry = fs.src('test/fixtures/entry.js');
   var stream = webpack({
@@ -15,7 +15,7 @@ test('streams output assets', function(t) {
     },
     quiet: true,
   });
-  stream.on('data', function(file) {
+  stream.on('data', function (file) {
     var basename = path.basename(file.path);
     var contents = file.contents.toString();
     switch (basename) {
@@ -25,13 +25,13 @@ test('streams output assets', function(t) {
         break;
       case '1.bundle.js':
         t.ok(/var chunk = true;/i.test(contents), 'should contain "var chunk = true;"');
-      break;
+        break;
     }
   });
   entry.pipe(stream);
 });
 
-test('multiple entry points', function(t) {
+test('multiple entry points', function (t) {
   t.plan(3);
   var stream = webpack({
     entry: {
@@ -43,7 +43,7 @@ test('multiple entry points', function(t) {
     },
     quiet: true,
   });
-  stream.on('data', function(file) {
+  stream.on('data', function (file) {
     var basename = path.basename(file.path);
     var contents = file.contents.toString();
     switch (basename) {
@@ -53,17 +53,17 @@ test('multiple entry points', function(t) {
         break;
       case 'two.bundle.js':
         t.ok(/var anotherentrypoint = true;/i.test(contents), 'should contain "var anotherentrypoint = true;"');
-      break;
+        break;
     }
   });
   stream.end();
 });
 
-test('stream multiple entry points', function(t) {
+test('stream multiple entry points', function (t) {
   t.plan(3);
   var entries = fs.src(['test/fixtures/entry.js', 'test/fixtures/anotherentrypoint.js']);
-  var stream = webpack({quiet:true});
-  stream.on('data', function(file) {
+  var stream = webpack({quiet: true});
+  stream.on('data', function (file) {
     var basename = path.basename(file.path);
     var contents = file.contents.toString();
     switch (basename) {
@@ -73,8 +73,29 @@ test('stream multiple entry points', function(t) {
         break;
       case 'anotherentrypoint.js':
         t.ok(/var anotherentrypoint = true;/i.test(contents), 'should contain "var anotherentrypoint = true;"');
-      break;
+        break;
     }
   });
   entries.pipe(named()).pipe(stream);
 });
+
+
+test('empty input stream', function (t) {
+
+  t.plan(1);
+
+  var entry = fs.src('test/path/to/nothing');
+  var stream = webpack({quiet: true});
+  var data = null;
+
+  stream.on('data', function (file) {
+    data = file;
+  });
+
+  stream.on('end', function () {
+    t.ok(data === null,'should not write any output');
+  });
+
+  entry.pipe(named()).pipe(stream);
+});
+
