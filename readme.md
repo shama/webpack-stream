@@ -18,7 +18,7 @@ gulp.task('default', function() {
 
 The above will compile `src/entry.js` into assets with webpack into `dist/` with the output filename of `[hash].js` (webpack generated hash of the build).
 
-You can pass webpack options in with the first argument, including `watch` which will greatly increase compilation times:
+You can pass webpack options in with the first argument, including `watch` which will greatly decrease compilation times:
 
 ```js
 return gulp.src('src/entry.js')
