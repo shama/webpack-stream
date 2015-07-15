@@ -94,7 +94,7 @@ module.exports = function (options, wp, done) {
     entry = [];
 
     if (!options.entry || options.entry.length < 1) {
-      gutil.log('gulp-webpack - No files given; aborting compilation');
+      gutil.log('webpack-stream - No files given; aborting compilation');
       return  self.emit('end');
     }
 
