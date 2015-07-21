@@ -23,7 +23,7 @@ var defaultStatsOptions = {
 };
 
 module.exports = function (options, wp, done) {
-  options = options || {};
+  options = clone(options) || {};
   if (typeof done !== 'function') {
     var callingDone = false;
     done = function (err, stats) {
@@ -160,3 +160,12 @@ Object.defineProperty(module.exports, 'webpack', {
     return require('webpack');
   }
 });
+
+function clone(source) {
+  var target = {};
+  Object.keys(source).forEach(function(key) {
+    target[key] = source[key];
+  });
+
+  return target;
+}
