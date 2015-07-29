@@ -19,7 +19,7 @@ var defaultStatsOptions = {
   cachedAssets: false,
   reasons: false,
   source: false,
-  errorDetails: false,
+  errorDetails: false
 };
 
 module.exports = function (options, wp, done) {
@@ -27,6 +27,10 @@ module.exports = function (options, wp, done) {
   if (typeof done !== 'function') {
     var callingDone = false;
     done = function (err, stats) {
+      if (err) {
+        // The err is here just to match the API but isnt used
+        return;
+      }
       stats = stats || {};
       if (options.quiet || callingDone) {
         return;
@@ -40,7 +44,7 @@ module.exports = function (options, wp, done) {
       }
       if (options.verbose) {
         gutil.log(stats.toString({
-          colors: gutil.colors.supportsColor,
+          colors: gutil.colors.supportsColor
         }));
       } else {
         var statsOptions = options && options.stats || {};
@@ -53,7 +57,7 @@ module.exports = function (options, wp, done) {
 
         gutil.log(stats.toString(statsOptions));
       }
-    }
+    };
   }
 
   var webpack = wp || require('webpack');
@@ -82,7 +86,7 @@ module.exports = function (options, wp, done) {
       entry = entries;
       if (!options.output.filename) {
         // Better output default for multiple chunks
-        options.output.filename = '[name].js'
+        options.output.filename = '[name].js';
       }
     } else if (entry.length < 2) {
       entry = entry[0] || entry;
@@ -95,7 +99,7 @@ module.exports = function (options, wp, done) {
 
     if (!options.entry || options.entry.length < 1) {
       gutil.log('webpack-stream - No files given; aborting compilation');
-      return  self.emit('end');
+      return self.emit('end');
     }
 
     var compiler = webpack(options, function (err, stats) {
@@ -138,7 +142,7 @@ module.exports = function (options, wp, done) {
           self.queue(new File({
             base: compiler.outputPath,
             path: path,
-            contents: contents,
+            contents: contents
           }));
         }
       });
@@ -161,9 +165,9 @@ Object.defineProperty(module.exports, 'webpack', {
   }
 });
 
-function clone(source) {
+function clone (source) {
   var target = {};
-  Object.keys(source).forEach(function(key) {
+  Object.keys(source).forEach(function (key) {
     target[key] = source[key];
   });
 

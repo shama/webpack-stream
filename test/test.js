@@ -13,7 +13,7 @@ test('streams output assets', function (t) {
     output: {
       filename: 'bundle.js'
     },
-    quiet: true,
+    quiet: true
   });
   stream.on('data', function (file) {
     var basename = path.basename(file.path);
@@ -36,12 +36,12 @@ test('multiple entry points', function (t) {
   var stream = webpack({
     entry: {
       'one': path.join(base, 'entry.js'),
-      'two': path.join(base, 'anotherentrypoint.js'),
+      'two': path.join(base, 'anotherentrypoint.js')
     },
     output: {
       filename: '[name].bundle.js'
     },
-    quiet: true,
+    quiet: true
   });
   stream.on('data', function (file) {
     var basename = path.basename(file.path);
@@ -91,7 +91,7 @@ test('empty input stream', function (t) {
   });
 
   stream.on('end', function () {
-    t.ok(data === null,'should not write any output');
+    t.ok(data === null, 'should not write any output');
   });
 
   entry.pipe(named()).pipe(stream);
