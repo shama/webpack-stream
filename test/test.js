@@ -79,9 +79,7 @@ test('stream multiple entry points', function (t) {
   entries.pipe(named()).pipe(stream);
 });
 
-
 test('empty input stream', function (t) {
-
   t.plan(1);
 
   var entry = fs.src('test/path/to/nothing');
@@ -98,4 +96,3 @@ test('empty input stream', function (t) {
 
   entry.pipe(named()).pipe(stream);
 });
-
