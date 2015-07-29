@@ -1,6 +1,6 @@
 {
   "name": "webpack-stream",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "description": "Run webpack as a stream",
   "license": "MIT",
   "homepage": "https://github.com/shama/webpack-stream",
@@ -20,7 +20,9 @@
     "index.js"
   ],
   "semistandard": {
-    "ignore": ["test/fixtures"]
+    "ignore": [
+      "test/fixtures"
+    ]
   },
   "dependencies": {
     "memory-fs": ">=0.2.0 <0.3.0-0",
