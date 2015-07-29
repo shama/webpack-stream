@@ -110,6 +110,7 @@ gulp.task('default', function() {
 The above `named()` stream will add a `.named` property to the vinyl files passing through. The `webpack()` stream will read those as entry points and even group entry points with common names together.
 
 ## Release History
+* 2.1.0 - Avoid modifying options by reference (@shinuza). Replace log with correct package name (@vinnymac).
 * 2.0.0 - Rename to webpack-stream and now it's totally not a gulp plugin.
 * 1.5.0 - Update webpack to 1.9.x (@nmccready). Update other dependencies.
 * 1.4.0 - Update webpack to 1.8.x (@Zolmeister).
