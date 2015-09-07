@@ -145,17 +145,17 @@ module.exports = function (options, wp, done) {
           var contents = fs.readFileSync(path);
 
           // only do this if a relative base has been set in gulp.src options
-          var pathParts;
+          var pathParts, outputPath = compiler.outputPath;
           if (_file.base.indexOf('.') === 0) {
             pathParts = _file.path.split('\\');
             pathParts.pop();
             pathParts.push(path.split('\\').pop());
             path = pathParts.join('\\');
-            compiler.outputPath = _file.base;
+            outputPath = _file.base;
           }
 
           self.queue(new File({
-            base: compiler.outputPath,
+            base: outputPath,
             path: path,
             contents: contents
           }));
