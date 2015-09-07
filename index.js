@@ -63,6 +63,7 @@ module.exports = function (options, wp, done) {
   var webpack = wp || require('webpack');
   var entry = [];
   var entries = Object.create(null);
+  var _file;
 
   var stream = through(function (file) {
     if (file.isNull()) {
@@ -77,6 +78,9 @@ module.exports = function (options, wp, done) {
       entry = entry || [];
       entry.push(file.path);
     }
+
+    _file = file;
+
   }, function () {
     var self = this;
     options.output = options.output || {};
@@ -139,6 +143,17 @@ module.exports = function (options, wp, done) {
             path = path.split('?')[0];
           }
           var contents = fs.readFileSync(path);
+
+          // only do this if a relative base has been set in gulp.src options
+          var pathParts
+          if (_file.base.indexOf('.') === 0) {
+            pathParts = _file.path.split('\\');
+            pathParts.pop();
+            pathParts.push(path.split('\\').pop());
+            path = pathParts.join('\\');
+            compiler.outputPath = _file.base;
+          }
+
           self.queue(new File({
             base: compiler.outputPath,
             path: path,
