@@ -145,7 +145,7 @@ module.exports = function (options, wp, done) {
           var contents = fs.readFileSync(path);
 
           // only do this if a relative base has been set in gulp.src options
-          var pathParts
+          var pathParts;
           if (_file.base.indexOf('.') === 0) {
             pathParts = _file.path.split('\\');
             pathParts.pop();
