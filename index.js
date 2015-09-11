@@ -106,6 +106,9 @@ module.exports = function (options, wp, done) {
       if (err) {
         self.emit('error', new gutil.PluginError('webpack-stream', err));
       }
+      if (stats.compilation.errors.toString()) {
+        self.emit('error', new gutil.PluginError('webpack-stream', stats.compilation.errors.toString()));
+      }
       if (!options.watch) {
         self.queue(null);
       }
