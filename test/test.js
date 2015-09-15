@@ -96,3 +96,12 @@ test('empty input stream', function (t) {
 
   entry.pipe(named()).pipe(stream);
 });
+
+test('no options', function (t) {
+  t.plan(1);
+  var stream = webpack();
+  stream.on('end', function () {
+    t.ok(true, 'ended without error');
+  });
+  stream.end();
+});

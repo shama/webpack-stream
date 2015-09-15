@@ -5,6 +5,7 @@ var File = require('vinyl');
 var MemoryFileSystem = require('memory-fs');
 var through = require('through');
 var ProgressPlugin = require('webpack/lib/ProgressPlugin');
+var clone = require('lodash.clone');
 
 var defaultStatsOptions = {
   colors: gutil.colors.supportsColor,
@@ -164,12 +165,3 @@ Object.defineProperty(module.exports, 'webpack', {
     return require('webpack');
   }
 });
-
-function clone (source) {
-  var target = {};
-  Object.keys(source).forEach(function (key) {
-    target[key] = source[key];
-  });
-
-  return target;
-}
