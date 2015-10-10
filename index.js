@@ -107,9 +107,7 @@ module.exports = function (options, wp, done) {
       if (err) {
         self.emit('error', new gutil.PluginError('webpack-stream', err));
       }
-      if (!options.watch) {
-        self.queue(null);
-      }
+      self.queue(null);
       done(err, stats);
       if (options.watch && !options.quiet) {
         gutil.log('webpack is watching for changes');
