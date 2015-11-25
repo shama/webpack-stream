@@ -30,6 +30,7 @@
     "memory-fs": ">=0.2.0 <0.3.0-0",
     "through": ">=2.3.4 <2.4.0-0",
     "vinyl": ">=0.5.0 <0.6.0-0",
+    "vinyl-sourcemaps-apply": "^0.2.0",
     "webpack": ">=1.9.0 <2.0.0-0"
   },
   "devDependencies": {

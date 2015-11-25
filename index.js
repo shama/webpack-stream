@@ -6,6 +6,7 @@ var MemoryFileSystem = require('memory-fs');
 var through = require('through');
 var ProgressPlugin = require('webpack/lib/ProgressPlugin');
 var clone = require('lodash.clone');
+var applySourceMap = require('vinyl-sourcemaps-apply');
 
 var defaultStatsOptions = {
   colors: gutil.colors.supportsColor,
@@ -132,21 +133,42 @@ module.exports = function (options, wp, done) {
     }
 
     var fs = compiler.outputFileSystem = new MemoryFileSystem();
-    compiler.plugin('after-emit', function (compilation, callback) {
-      Object.keys(compilation.assets).forEach(function (outname) {
-        if (compilation.assets[outname].emitted) {
-          var path = fs.join(compiler.outputPath, outname);
-          if (path.indexOf('?') !== -1) {
-            path = path.split('?')[0];
-          }
-          var contents = fs.readFileSync(path);
-          self.queue(new File({
-            base: compiler.outputPath,
-            path: path,
-            contents: contents
-          }));
+
+    var queueFile = function (outname, isEmitted, assetNames) {
+      if (isEmitted) {
+        var path = fs.join(compiler.outputPath, outname);
+        if (path.indexOf('?') !== -1) {
+          path = path.split('?')[0];
         }
-      });
+        var contents = fs.readFileSync(path);
+        var file = new File({
+          base: compiler.outputPath,
+          path: path,
+          // Remove the source map comment as Gulp will handle that
+          contents: new Buffer(contents.toString().replace(/\n\/\/#.*$/, ''))
+        });
+        var sourceMapPath = outname + '.map';
+        var hasSourceMap = assetNames.some(function (assetName) {
+          return assetName === sourceMapPath;
+        });
+        if (hasSourceMap) {
+          var sourceMap = JSON.parse(fs.readFileSync(fs.join(compiler.outputPath, sourceMapPath)));
+          applySourceMap(file, sourceMap);
+        }
+        self.queue(file);
+      }
+    };
+
+    compiler.plugin('after-emit', function (compilation, callback) {
+      var assetNames = Object.keys(compilation.assets);
+      assetNames
+        // Webpack emits the source map, but Gulp will read that for us
+        .filter(function (outname) {
+          return !/\.map$/.test(outname);
+        })
+        .forEach(function (outname) {
+          queueFile(outname, compilation.assets[outname].emitted, assetNames);
+        });
       callback();
     });
   });
