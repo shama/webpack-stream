@@ -28,7 +28,6 @@
     "gulp-util": ">=3.0.0 <3.1.0-0",
     "lodash.clone": ">=3.0.0 <3.1.0-0",
     "memory-fs": ">=0.2.0 <0.3.0-0",
-    "semistandard": "^7.0.2",
     "through": ">=2.3.4 <2.4.0-0",
     "vinyl": ">=0.5.0 <0.6.0-0",
     "vinyl-sourcemaps-apply": "^0.2.0",
@@ -37,8 +36,8 @@
   "devDependencies": {
     "gulp": ">=3.9.0 <3.10.0-0",
     "rimraf": ">=2.4.0 <2.5.0-0",
-    "semistandard": "^6.1.2",
-    "tape": ">=4.0.0 <4.1.0-0",
+    "semistandard": ">=7.0.0 <7.1.0-0",
+    "tape": ">=4.2.0 <4.3.0-0",
     "vinyl-fs": ">=0.3.9 <1.1.0-0",
     "vinyl-named": ">=1.1.0 <1.2.0-0"
   },
