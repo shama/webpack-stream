@@ -134,31 +134,6 @@ module.exports = function (options, wp, done) {
 
     var fs = compiler.outputFileSystem = new MemoryFileSystem();
 
-    var queueFile = function (outname, isEmitted, assetNames) {
-      if (isEmitted) {
-        var path = fs.join(compiler.outputPath, outname);
-        if (path.indexOf('?') !== -1) {
-          path = path.split('?')[0];
-        }
-        var contents = fs.readFileSync(path);
-        var file = new File({
-          base: compiler.outputPath,
-          path: path,
-          // Remove the source map comment as Gulp will handle that
-          contents: new Buffer(contents.toString().replace(/\n\/\/#.*$/, ''))
-        });
-        var sourceMapPath = outname + '.map';
-        var hasSourceMap = assetNames.some(function (assetName) {
-          return assetName === sourceMapPath;
-        });
-        if (hasSourceMap) {
-          var sourceMap = JSON.parse(fs.readFileSync(fs.join(compiler.outputPath, sourceMapPath)));
-          applySourceMap(file, sourceMap);
-        }
-        self.queue(file);
-      }
-    };
-
     compiler.plugin('after-emit', function (compilation, callback) {
       var assetNames = Object.keys(compilation.assets);
       assetNames
@@ -167,7 +142,10 @@ module.exports = function (options, wp, done) {
           return !/\.map$/.test(outname);
         })
         .forEach(function (outname) {
-          queueFile(outname, compilation.assets[outname].emitted, assetNames);
+          if (compilation.assets[outname].emitted) {
+            var file = prepareFile(fs, compiler, outname, assetNames);
+            self.queue(file);
+          }
         });
       callback();
     });
@@ -180,6 +158,30 @@ module.exports = function (options, wp, done) {
 
   return stream;
 };
+
+// Prepare vinyl files with source maps
+function prepareFile (fs, compiler, outname, assetNames) {
+  var path = fs.join(compiler.outputPath, outname);
+  if (path.indexOf('?') !== -1) {
+    path = path.split('?')[0];
+  }
+  var contents = fs.readFileSync(path);
+  var file = new File({
+    base: compiler.outputPath,
+    path: path,
+    // Remove the source map comment as gulp will handle that
+    contents: new Buffer(contents.toString().replace(/\n\/\/#.*$/, ''))
+  });
+  var sourceMapPath = outname + '.map';
+  var hasSourceMap = assetNames.some(function (assetName) {
+    return assetName === sourceMapPath;
+  });
+  if (hasSourceMap) {
+    var sourceMap = JSON.parse(fs.readFileSync(fs.join(compiler.outputPath, sourceMapPath)));
+    applySourceMap(file, sourceMap);
+  }
+  return file;
+}
 
 // Expose webpack if asked
 Object.defineProperty(module.exports, 'webpack', {
