@@ -172,14 +172,15 @@ function prepareFile (fs, compiler, outname, assetNames) {
   var file = new File({
     base: compiler.outputPath,
     path: path,
-    // Remove the source map comment as gulp will handle that
-    contents: new Buffer(contents.toString().replace(/\n\/\/#.*$/, ''))
+    contents: contents
   });
   var sourceMapPath = outname + '.map';
   var hasSourceMap = assetNames.some(function (assetName) {
     return assetName === sourceMapPath;
   });
   if (hasSourceMap) {
+    // Remove the source map comment as gulp will handle that
+    file.contents = new Buffer(contents.toString().replace(/\n\/\/#.*$/, ''));
     var sourceMap = JSON.parse(fs.readFileSync(fs.join(compiler.outputPath, sourceMapPath)));
     applySourceMap(file, sourceMap);
   }
