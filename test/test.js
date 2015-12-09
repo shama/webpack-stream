@@ -6,30 +6,28 @@ var named = require('vinyl-named');
 
 var base = path.resolve(__dirname, 'fixtures');
 
-test('source maps', function (t) {
+test('source maps with gulp', function (t) {
   t.plan(2);
   var entry = fs.src('test/fixtures/entry.js');
+  var stream = webpack({
+    quiet: true,
+    devtool: 'source-map'
+  });
+  stream.on('data', function (file) {
+    t.ok(!!file.sourceMap, 'should have vinyl source map');
+  });
+  entry.pipe(stream);
+});
+
+test('source maps', function (t) {
+  t.plan(4);
+  var entry = fs.src('test/fixtures/one.js');
   var stream = webpack({
     output: {
       filename: 'bundle.js'
     },
     quiet: true,
     devtool: 'source-map'
-  });
-  stream.on('data', function (file) {
-    t.ok(!!file.sourceMap, 'should have source map');
-  });
-  entry.pipe(stream);
-});
-
-test('streams output assets', function (t) {
-  t.plan(3);
-  var entry = fs.src('test/fixtures/entry.js');
-  var stream = webpack({
-    output: {
-      filename: 'bundle.js'
-    },
-    quiet: true
   });
   stream.on('data', function (file) {
     var basename = path.basename(file.path);
@@ -39,8 +37,10 @@ test('streams output assets', function (t) {
         t.ok(/__webpack_require__/i.test(contents), 'should contain "__webpack_require__"');
         t.ok(/var one = true;/i.test(contents), 'should contain "var one = true;"');
         break;
-      case '1.bundle.js':
-        t.ok(/var chunk = true;/i.test(contents), 'should contain "var chunk = true;"');
+      case 'bundle.js.map':
+        var sourceMap = JSON.parse(contents);
+        t.ok(sourceMap.version === 3, 'should be valid source map;"');
+        t.ok(!file.sourceMap, 'should not have vinyl source map');
         break;
     }
   });
