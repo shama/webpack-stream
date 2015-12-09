@@ -94,6 +94,8 @@ module.exports = function (options, wp, done) {
       entry = entry[0] || entry;
     }
 
+    var isStandalone = Object.keys(options.output).length === 0;
+
     options.entry = options.entry || entry;
     options.output.path = options.output.path || process.cwd();
     options.output.filename = options.output.filename || '[hash].js';
@@ -142,11 +144,11 @@ module.exports = function (options, wp, done) {
       assetNames
         // Webpack emits the source map, but Gulp will read that for us
         .filter(function (outname) {
-          return !/\.map$/.test(outname);
+          return !isStandalone || !/\.map$/.test(outname);
         })
         .forEach(function (outname) {
           if (compilation.assets[outname].emitted) {
-            var file = prepareFile(fs, compiler, outname, assetNames);
+            var file = prepareFile(fs, compiler, outname, assetNames, isStandalone);
             self.queue(file);
           }
         });
@@ -163,7 +165,7 @@ module.exports = function (options, wp, done) {
 };
 
 // Prepare vinyl files with source maps
-function prepareFile (fs, compiler, outname, assetNames) {
+function prepareFile (fs, compiler, outname, assetNames, isStandalone) {
   var path = fs.join(compiler.outputPath, outname);
   if (path.indexOf('?') !== -1) {
     path = path.split('?')[0];
@@ -179,7 +181,8 @@ function prepareFile (fs, compiler, outname, assetNames) {
   var hasSourceMap = assetNames.some(function (assetName) {
     return assetName === sourceMapPath;
   });
-  if (hasSourceMap) {
+
+  if (hasSourceMap && isStandalone) {
     var sourceMap = JSON.parse(fs.readFileSync(fs.join(compiler.outputPath, sourceMapPath)));
     applySourceMap(file, sourceMap);
   }
