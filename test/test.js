@@ -98,7 +98,7 @@ test('stream multiple entry points', function (t) {
 test('empty input stream', function (t) {
   t.plan(1);
 
-  var entry = fs.src('test/path/to/nothing');
+  var entry = fs.src('test/path/to/nothing', { allowEmpty: true });
   var stream = webpack({quiet: true});
   var data = null;
 
