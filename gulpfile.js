@@ -7,7 +7,9 @@ gulp.task('default', function () {
   rimraf.sync('tmp');
   return gulp.src(['test/fixtures/entry.js', 'test/fixtures/anotherentrypoint.js'])
     .pipe(named())
-    .pipe(webpack())
+    .pipe(webpack({
+      devtool: 'source-map'
+    }))
     .pipe(gulp.dest('tmp/'));
 });
 

@@ -109,7 +109,58 @@ gulp.task('default', function() {
 
 The above `named()` stream will add a `.named` property to the vinyl files passing through. The `webpack()` stream will read those as entry points and even group entry points with common names together.
 
+#### Source Maps
+
+Source maps are built into webpack, specify a [devtool](https://webpack.github.io/docs/configuration.html#devtool):
+
+```js
+var gulp = require('gulp');
+var webpack = require('webpack-stream');
+var named = require('vinyl-named');
+gulp.task('default', function() {
+  return gulp.src(['src/app.js', 'test/test.js'])
+    .pipe(named())
+    .pipe(webpack({
+      devtool: 'source-map'
+    }))
+    .pipe(gulp.dest('dist/'));
+});
+```
+
+Now the appropriate `.map` files will be emitted. Or set to `inline-source-map`
+to inline the source maps into the files.
+
+If you need further special handling of source maps, such as using with
+[gulp-sourcemaps](https://github.com/floridoo/gulp-sourcemaps) then just pipe
+to a stream and handle the source map files emitted by webpack:
+
+```js
+var gulp = require('gulp');
+var webpack = require('webpack-stream');
+var named = require('vinyl-named');
+var through = require('through2');
+var sourcemaps = require('gulp-sourcemaps');
+gulp.task('default', function() {
+  return gulp.src(['src/app.js', 'test/test.js'])
+    .pipe(named())
+    .pipe(webpack({
+      devtool: 'source-map'
+    }))
+    .pipe(sourcemaps.init({loadMaps: true}))
+    .pipe(through.obj(function (file, enc, cb) {
+      // Dont pipe through any source map files as it will be handled
+      // by gulp-sourcemaps
+      var isSourceMap = /\.map$/.test(file.path);
+      if (!isSourceMap) this.push(file);
+      cb();
+    }))
+    .pipe(sourcemaps.write('.'))
+    .pipe(gulp.dest('dist/'));
+});
+```
+
 ## Release History
+* 3.0.0 - Remove special handling of source maps.
 * 2.3.0 - Emit stats.compilation.errors as `error` (@JakeChampion).
 * 2.2.0 - Add support for source maps (@OliverJAsh).
 * 2.1.0 - Avoid modifying options by reference (@shinuza). Replace log with correct package name (@vinnymac).

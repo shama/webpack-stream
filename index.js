@@ -6,7 +6,6 @@ var MemoryFileSystem = require('memory-fs');
 var through = require('through');
 var ProgressPlugin = require('webpack/lib/ProgressPlugin');
 var clone = require('lodash.clone');
-var applySourceMap = require('vinyl-sourcemaps-apply');
 
 var defaultStatsOptions = {
   colors: gutil.colors.supportsColor,
@@ -138,18 +137,12 @@ module.exports = function (options, wp, done) {
     var fs = compiler.outputFileSystem = new MemoryFileSystem();
 
     compiler.plugin('after-emit', function (compilation, callback) {
-      var assetNames = Object.keys(compilation.assets);
-      assetNames
-        // Webpack emits the source map, but Gulp will read that for us
-        .filter(function (outname) {
-          return !/\.map$/.test(outname);
-        })
-        .forEach(function (outname) {
-          if (compilation.assets[outname].emitted) {
-            var file = prepareFile(fs, compiler, outname, assetNames);
-            self.queue(file);
-          }
-        });
+      Object.keys(compilation.assets).forEach(function (outname) {
+        if (compilation.assets[outname].emitted) {
+          var file = prepareFile(fs, compiler, outname);
+          self.queue(file);
+        }
+      });
       callback();
     });
   });
@@ -162,8 +155,7 @@ module.exports = function (options, wp, done) {
   return stream;
 };
 
-// Prepare vinyl files with source maps
-function prepareFile (fs, compiler, outname, assetNames) {
+function prepareFile (fs, compiler, outname) {
   var path = fs.join(compiler.outputPath, outname);
   if (path.indexOf('?') !== -1) {
     path = path.split('?')[0];
@@ -172,17 +164,8 @@ function prepareFile (fs, compiler, outname, assetNames) {
   var file = new File({
     base: compiler.outputPath,
     path: path,
-    // Remove the source map comment as gulp will handle that
-    contents: new Buffer(contents.toString().replace(/\n\/\/#.*$/, ''))
+    contents: new Buffer(contents.toString())
   });
-  var sourceMapPath = outname + '.map';
-  var hasSourceMap = assetNames.some(function (assetName) {
-    return assetName === sourceMapPath;
-  });
-  if (hasSourceMap) {
-    var sourceMap = JSON.parse(fs.readFileSync(fs.join(compiler.outputPath, sourceMapPath)));
-    applySourceMap(file, sourceMap);
-  }
   return file;
 }
 

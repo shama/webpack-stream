@@ -6,22 +6,6 @@ var named = require('vinyl-named');
 
 var base = path.resolve(__dirname, 'fixtures');
 
-test('source maps', function (t) {
-  t.plan(2);
-  var entry = fs.src('test/fixtures/entry.js');
-  var stream = webpack({
-    output: {
-      filename: 'bundle.js'
-    },
-    quiet: true,
-    devtool: 'source-map'
-  });
-  stream.on('data', function (file) {
-    t.ok(!!file.sourceMap, 'should have source map');
-  });
-  entry.pipe(stream);
-});
-
 test('streams output assets', function (t) {
   t.plan(3);
   var entry = fs.src('test/fixtures/entry.js');
