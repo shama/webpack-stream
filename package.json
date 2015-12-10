@@ -25,13 +25,12 @@
     ]
   },
   "dependencies": {
-    "gulp-util": ">=3.0.0 <3.1.0-0",
-    "lodash.clone": ">=3.0.0 <3.1.0-0",
-    "memory-fs": ">=0.2.0 <0.3.0-0",
-    "through": ">=2.3.4 <2.4.0-0",
-    "vinyl": ">=0.5.0 <0.6.0-0",
-    "vinyl-sourcemaps-apply": "^0.2.0",
-    "webpack": ">=1.9.0 <2.0.0-0"
+    "gulp-util": "^3.0.7",
+    "lodash.clone": "^3.0.3",
+    "memory-fs": "^0.3.0",
+    "through": "^2.3.8",
+    "vinyl": "^1.1.0",
+    "webpack": "^1.12.9"
   },
   "devDependencies": {
     "gulp": "^3.9.0",
