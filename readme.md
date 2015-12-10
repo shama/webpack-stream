@@ -160,7 +160,7 @@ gulp.task('default', function() {
 ```
 
 ## Release History
-* 3.0.0 - Remove special handling of source maps.
+* 3.0.0 - Remove special handling of source maps. Update dependencies.
 * 2.3.0 - Emit stats.compilation.errors as `error` (@JakeChampion).
 * 2.2.0 - Add support for source maps (@OliverJAsh).
 * 2.1.0 - Avoid modifying options by reference (@shinuza). Replace log with correct package name (@vinnymac).
