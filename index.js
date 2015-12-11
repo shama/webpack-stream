@@ -164,7 +164,7 @@ function prepareFile (fs, compiler, outname) {
   var file = new File({
     base: compiler.outputPath,
     path: path,
-    contents: new Buffer(contents.toString())
+    contents: contents
   });
   return file;
 }
