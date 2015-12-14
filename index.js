@@ -111,7 +111,7 @@ module.exports = function (options, wp, done) {
       var errors = jsonStats.errors || [];
       if (errors.length) {
         var errorMessage = errors.reduce(function (resultMessage, nextError) {
-          return resultMessage += nextError.toString()
+          return resultMessage += nextError.toString();
          }, "");
         self.emit('error', new gutil.PluginError('webpack-stream', errorMessage));
       }
