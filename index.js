@@ -107,8 +107,13 @@ module.exports = function (options, wp, done) {
       if (err) {
         self.emit('error', new gutil.PluginError('webpack-stream', err));
       }
-      if (stats.compilation.errors.toString()) {
-        self.emit('error', new gutil.PluginError('webpack-stream', stats.compilation.errors.toString()));
+      var jsonStats = stats.toJson() || {};
+      var errors = jsonStats.errors || [];
+      if (errors.length) {
+        var errorMessage = errors.reduce(function (resultMessage, nextError) {
+          return resultMessage += nextError.toString()
+         }, "");
+        self.emit('error', new gutil.PluginError('webpack-stream', errorMessage));
       }
       if (!options.watch) {
         self.queue(null);
