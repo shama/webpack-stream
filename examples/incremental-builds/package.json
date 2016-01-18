@@ -1,0 +1,17 @@
+{
+  "name": "incremental-builds",
+  "version": "0.1.0",
+  "description": "",
+  "main": "gulpfile.js",
+  "scripts": {
+    "start": "budo index.js",
+    "test": "node test.js"
+  },
+  "author": "Kyle Robinson Young <kyle@dontkry.com> (http://dontkry.com)",
+  "license": "MIT",
+  "devDependencies": {
+    "gulp": "^3.9.0",
+    "mkdirp": "^0.5.1",
+    "rimraf": "^2.5.0"
+  }
+}
