@@ -99,7 +99,10 @@ module.exports = function (options, wp, done) {
     entry = [];
 
     if (!options.entry || options.entry.length < 1) {
-      gutil.log('webpack-stream - No files given; aborting compilation');
+      if (!options.quiet) {
+        gutil.log('webpack-stream - No files given; aborting compilation');
+      }
+
       return self.emit('end');
     }
 
