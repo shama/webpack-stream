@@ -205,7 +205,6 @@ function prepareFile (fs, compiler, outname) {
     path = path.split('?')[0];
   }
 
-  console.log(fs.existsSync(path));
   var contents = fs.readFileSync(path);
 
   var file = new File({
