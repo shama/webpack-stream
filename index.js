@@ -167,24 +167,25 @@ module.exports = function (options, wp, done) {
 
     var fs = compiler.outputFileSystem = new MemoryFileSystem();
 
-    compiler.plugin('done', function (result) {
-      var queueAssets = function (assets) {
-        Object.keys(assets).forEach(function (outname) {
-          if (assets[outname].emitted) {
+    var handleCompilerEvent = function (compiler) {
+      compiler.plugin('after-emit', function (compilation, callback) {
+        Object.keys(compilation.assets).forEach(function (outname) {
+          if (compilation.assets[outname].emitted) {
             var file = prepareFile(fs, compiler, outname);
             self.queue(file);
           }
         });
-      };
+        callback();
+      });
+    };
 
-      if (compiler instanceof MultiCompiler) {
-        result.stats.forEach(function (stats) {
-          queueAssets(stats.compilation.assets);
-        });
-      } else {
-        queueAssets(result.compilation.assets);
-      }
-    });
+    if (compiler instanceof MultiCompiler) {
+      compiler.compilers.forEach(function (compiler) {
+        handleCompilerEvent(compiler);
+      });
+    } else {
+      handleCompilerEvent(compiler);
+    }
   });
 
   // If entry point manually specified, trigger that
@@ -203,7 +204,10 @@ function prepareFile (fs, compiler, outname) {
   if (path.indexOf('?') !== -1) {
     path = path.split('?')[0];
   }
+
+  console.log(fs.existsSync(path));
   var contents = fs.readFileSync(path);
+
   var file = new File({
     base: compiler.outputPath,
     path: path,
