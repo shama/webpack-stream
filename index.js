@@ -103,6 +103,7 @@ module.exports = function (options, wp, done) {
       config.entry = config.entry || entry;
       config.output.path = config.output.path || process.cwd();
       config.output.filename = config.output.filename || '[hash].js';
+      config.watch = options.watch;
       entry = [];
 
       if (!config.entry || config.entry.length < 1) {
@@ -150,24 +151,24 @@ module.exports = function (options, wp, done) {
       }
     });
 
-    // In watch mode webpack returns a wrapper object so we need to get
-    // the underlying compiler
-    if (options.watch) {
-      compiler = compiler.compiler;
-    }
+    var handleCompiler = function (compiler) {
+      // In watch mode webpack returns a wrapper object so we need to get
+      // the underlying compiler
+      if (options.watch && compiler.compiler) {
+        compiler = compiler.compiler;
+      }
 
-    if (options.progress) {
-      compiler.apply(new ProgressPlugin(function (percentage, msg) {
-        percentage = Math.floor(percentage * 100);
-        msg = percentage + '% ' + msg;
-        if (percentage < 10) msg = ' ' + msg;
-        gutil.log('webpack', msg);
-      }));
-    }
+      if (options.progress) {
+        compiler.apply(new ProgressPlugin(function (percentage, msg) {
+          percentage = Math.floor(percentage * 100);
+          msg = percentage + '% ' + msg;
+          if (percentage < 10) msg = ' ' + msg;
+          gutil.log('webpack', msg);
+        }));
+      }
 
-    var fs = compiler.outputFileSystem = new MemoryFileSystem();
+      var fs = compiler.outputFileSystem = new MemoryFileSystem();
 
-    var handleCompilerEvent = function (compiler) {
       compiler.plugin('after-emit', function (compilation, callback) {
         Object.keys(compilation.assets).forEach(function (outname) {
           if (compilation.assets[outname].emitted) {
@@ -181,10 +182,10 @@ module.exports = function (options, wp, done) {
 
     if (compiler instanceof MultiCompiler) {
       compiler.compilers.forEach(function (compiler) {
-        handleCompilerEvent(compiler);
+        handleCompiler(compiler);
       });
     } else {
-      handleCompilerEvent(compiler);
+      handleCompiler(compiler);
     }
   });
 
