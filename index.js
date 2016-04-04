@@ -5,7 +5,6 @@ var File = require('vinyl');
 var MemoryFileSystem = require('memory-fs');
 var through = require('through');
 var ProgressPlugin = require('webpack/lib/ProgressPlugin');
-var MultiCompiler = require('webpack/lib/MultiCompiler');
 var clone = require('lodash.clone');
 var some = require('lodash.some');
 
@@ -180,7 +179,11 @@ module.exports = function (options, wp, done) {
       });
     };
 
-    if (compiler instanceof MultiCompiler) {
+    if (Array.isArray(options.config) && options.watch) {
+      compiler.watchings.forEach(function (compiler) {
+        handleCompiler(compiler);
+      });
+    } else if (Array.isArray(options.config)) {
       compiler.compilers.forEach(function (compiler) {
         handleCompiler(compiler);
       });
