@@ -6,6 +6,7 @@ var MemoryFileSystem = require('memory-fs');
 var through = require('through');
 var ProgressPlugin = require('webpack/lib/ProgressPlugin');
 var clone = require('lodash.clone');
+var some = require('lodash.some');
 
 var defaultStatsOptions = {
   colors: gutil.colors.supportsColor,
@@ -25,6 +26,7 @@ var defaultStatsOptions = {
 
 module.exports = function (options, wp, done) {
   options = clone(options) || {};
+  var config = options.config || options;
   if (typeof done !== 'function') {
     var callingDone = false;
     done = function (err, stats) {
@@ -36,6 +38,7 @@ module.exports = function (options, wp, done) {
       if (options.quiet || callingDone) {
         return;
       }
+
       // Debounce output a little for when in watch mode
       if (options.watch) {
         callingDone = true;
@@ -43,6 +46,7 @@ module.exports = function (options, wp, done) {
           callingDone = false;
         }, 500);
       }
+
       if (options.verbose) {
         gutil.log(stats.toString({
           colors: gutil.colors.supportsColor
@@ -80,30 +84,51 @@ module.exports = function (options, wp, done) {
     }
   }, function () {
     var self = this;
-    options.output = options.output || {};
+    var handleConfig = function (config) {
+      config.output = config.output || {};
+      config.watch = !!options.watch;
 
-    // Determine pipe'd in entry
-    if (Object.keys(entries).length > 0) {
-      entry = entries;
-      if (!options.output.filename) {
-        // Better output default for multiple chunks
-        options.output.filename = '[name].js';
+      // Determine pipe'd in entry
+      if (Object.keys(entries).length > 0) {
+        entry = entries;
+        if (!config.output.filename) {
+          // Better output default for multiple chunks
+          config.output.filename = '[name].js';
+        }
+      } else if (entry.length < 2) {
+        entry = entry[0] || entry;
       }
-    } else if (entry.length < 2) {
-      entry = entry[0] || entry;
+
+      config.entry = config.entry || entry;
+      config.output.path = config.output.path || process.cwd();
+      config.output.filename = config.output.filename || '[hash].js';
+      config.watch = options.watch;
+      entry = [];
+
+      if (!config.entry || config.entry.length < 1) {
+        gutil.log('webpack-stream - No files given; aborting compilation');
+        self.emit('end');
+        return false;
+      }
+      return true;
+    };
+
+    var succeeded;
+    if (Array.isArray(config)) {
+      for (var i = 0; i < config.length; i++) {
+        succeeded = handleConfig(config[i]);
+        if (!succeeded) {
+          return false;
+        }
+      }
+    } else {
+      succeeded = handleConfig(config);
+      if (!succeeded) {
+        return false;
+      }
     }
 
-    options.entry = options.entry || entry;
-    options.output.path = options.output.path || process.cwd();
-    options.output.filename = options.output.filename || '[hash].js';
-    entry = [];
-
-    if (!options.entry || options.entry.length < 1) {
-      gutil.log('webpack-stream - No files given; aborting compilation');
-      return self.emit('end');
-    }
-
-    var compiler = webpack(options, function (err, stats) {
+    var compiler = webpack(config, function (err, stats) {
       if (err) {
         self.emit('error', new gutil.PluginError('webpack-stream', err));
       }
@@ -125,36 +150,53 @@ module.exports = function (options, wp, done) {
       }
     });
 
-    // In watch mode webpack returns a wrapper object so we need to get
-    // the underlying compiler
-    if (options.watch) {
-      compiler = compiler.compiler;
-    }
+    var handleCompiler = function (compiler) {
+      // In watch mode webpack returns a wrapper object so we need to get
+      // the underlying compiler
+      if (options.watch && compiler.compiler) {
+        compiler = compiler.compiler;
+      }
 
-    if (options.progress) {
-      compiler.apply(new ProgressPlugin(function (percentage, msg) {
-        percentage = Math.floor(percentage * 100);
-        msg = percentage + '% ' + msg;
-        if (percentage < 10) msg = ' ' + msg;
-        gutil.log('webpack', msg);
-      }));
-    }
+      if (options.progress) {
+        compiler.apply(new ProgressPlugin(function (percentage, msg) {
+          percentage = Math.floor(percentage * 100);
+          msg = percentage + '% ' + msg;
+          if (percentage < 10) msg = ' ' + msg;
+          gutil.log('webpack', msg);
+        }));
+      }
 
-    var fs = compiler.outputFileSystem = new MemoryFileSystem();
+      var fs = compiler.outputFileSystem = new MemoryFileSystem();
 
-    compiler.plugin('after-emit', function (compilation, callback) {
-      Object.keys(compilation.assets).forEach(function (outname) {
-        if (compilation.assets[outname].emitted) {
-          var file = prepareFile(fs, compiler, outname);
-          self.queue(file);
-        }
+      compiler.plugin('after-emit', function (compilation, callback) {
+        Object.keys(compilation.assets).forEach(function (outname) {
+          if (compilation.assets[outname].emitted) {
+            var file = prepareFile(fs, compiler, outname);
+            self.queue(file);
+          }
+        });
+        callback();
       });
-      callback();
-    });
+    };
+
+    if (Array.isArray(options.config) && options.watch) {
+      compiler.watchings.forEach(function (compiler) {
+        handleCompiler(compiler);
+      });
+    } else if (Array.isArray(options.config)) {
+      compiler.compilers.forEach(function (compiler) {
+        handleCompiler(compiler);
+      });
+    } else {
+      handleCompiler(compiler);
+    }
   });
 
   // If entry point manually specified, trigger that
-  if (options.entry) {
+  var hasEntry = Array.isArray(config)
+    ? some(config, function (c) { return c.entry; })
+    : config.entry;
+  if (hasEntry) {
     stream.end();
   }
 
@@ -166,7 +208,9 @@ function prepareFile (fs, compiler, outname) {
   if (path.indexOf('?') !== -1) {
     path = path.split('?')[0];
   }
+
   var contents = fs.readFileSync(path);
+
   var file = new File({
     base: compiler.outputPath,
     path: path,
