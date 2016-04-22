@@ -27,7 +27,7 @@
   },
   "dependencies": {
     "gulp-util": "^3.0.7",
-    "lodash.clone": "^3.0.3",
+    "lodash.clone": "^4.3.2",
     "lodash.some": "^4.2.2",
     "memory-fs": "^0.3.0",
     "through": "^2.3.8",
