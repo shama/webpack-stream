@@ -160,6 +160,7 @@ gulp.task('default', function() {
 ```
 
 ## Release History
+* 3.2.0 - Ability to use multiple compilers (@saschagehlich).
 * 3.1.0 - Better error output (@hi-q).
 * 3.0.1 - Fix fonts being passed through streams (@mattlewis92).
 * 3.0.0 - Remove special handling of source maps. Update dependencies.
