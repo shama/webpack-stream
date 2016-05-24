@@ -71,6 +71,33 @@ gulp.task('default', function() {
 });
 ```
 
+#### Usage with gulp watch
+
+To use gulp `watch`, it's required that you explicitly pass webpack in the 2nd argument for a cached `compiler` instance to be used on subsequent runs.
+
+Please note that gulp `watch` and webpack `watch` are mutually exclusive.
+
+```javascript
+var gulp = require('gulp');
+var compiler = require('webpack');
+var webpack = require('webpack-stream');
+
+gulp.task('build', function() {
+  return gulp.src('src/entry.js')
+    .pipe(webpack({
+      /* config */
+    }, compiler, function(err, stats) {
+      /* Use stats to do more things if needed */
+    }))
+    .pipe(gulp.dest('dist/'));
+});
+
+gulp.task('default', ['build'], function() {
+  gulp.watch(['src/**/*.js'], ['build']);
+});
+
+```
+
 #### Multiple Entry Points
 
 A common request is how to handle multiple entry points. You can continue to pass in an `entry` option in your typical webpack config like so:
