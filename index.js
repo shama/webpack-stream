@@ -132,7 +132,7 @@ module.exports = function (options, wp, done) {
       if (err) {
         self.emit('error', new gutil.PluginError('webpack-stream', err));
       }
-      var jsonStats = stats.toJson() || {};
+      var jsonStats = stats ? stats.toJson() || {} : {};
       var errors = jsonStats.errors || [];
       if (errors.length) {
         var errorMessage = errors.reduce(function (resultMessage, nextError) {
