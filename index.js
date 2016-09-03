@@ -139,7 +139,11 @@ module.exports = function (options, wp, done) {
           resultMessage += nextError.toString();
           return resultMessage;
         }, '');
-        self.emit('error', new gutil.PluginError('webpack-stream', errorMessage));
+        var compilationError = new gutil.PluginError('webpack-stream', errorMessage);
+        if (!options.watch) {
+          self.emit('error', compilationError);
+        }
+        self.emit('compilation-error', compilationError);
       }
       if (!options.watch) {
         self.queue(null);
