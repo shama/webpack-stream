@@ -159,6 +159,22 @@ gulp.task('default', function() {
 });
 ```
 
+#### Multi-compiler support
+
+Multiple compilers are supported, but instead of passing the webpack configuration directly, you have to wrap it in an object under the key 'config'.
+
+```js
+var gulp = require('gulp');
+var webpack = require('webpack-stream');
+gulp.task('default', function() {
+  return gulp.src('src/entry.js')
+    .pipe(webpack({
+      config : require('./webpack.config.js')
+    }))
+    .pipe(gulp.dest('dist/'));
+});
+```
+
 ## Release History
 * 3.2.0 - Ability to use multiple compilers (@saschagehlich).
 * 3.1.0 - Better error output (@hi-q).
