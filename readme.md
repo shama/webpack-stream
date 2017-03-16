@@ -4,6 +4,11 @@ Run [webpack](https://github.com/webpack/webpack) as a stream to conveniently in
 
 [![NPM](https://nodei.co/npm/webpack-stream.png?downloads=true)](https://nodei.co/npm/webpack-stream/)
 
+
+## Installation
+If you have `npm` run the following command in the console `npm install --save-dev webpack-stream`
+
+
 ## Usage
 
 ```js
