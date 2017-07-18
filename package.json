@@ -42,7 +42,8 @@
     "semistandard": "^11.0.0",
     "tape": "^4.2.2",
     "vinyl-fs": "^2.2.1",
-    "vinyl-named": "^1.1.0"
+    "vinyl-named": "^1.1.0",
+    "webpack": "^3.3.0"
   },
   "keywords": [
     "gulpplugin",
