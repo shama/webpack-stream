@@ -32,7 +32,9 @@
     "memory-fs": "^0.3.0",
     "through": "^2.3.8",
     "vinyl": "^1.1.0",
-    "webpack": "^1.12.9"
+  },
+  "peerDependencies": {
+    "webpack": ">=1.12.9"
   },
   "devDependencies": {
     "gulp": "^3.9.0",
