@@ -10,8 +10,10 @@ test('streams output assets', function (t) {
   t.plan(3);
   var entry = fs.src('test/fixtures/entry.js');
   var stream = webpack({
-    output: {
-      filename: 'bundle.js'
+    config: {
+      output: {
+        filename: 'bundle.js'
+      }
     },
     quiet: true
   });
@@ -23,7 +25,7 @@ test('streams output assets', function (t) {
         t.ok(/__webpack_require__/i.test(contents), 'should contain "__webpack_require__"');
         t.ok(/var one = true;/i.test(contents), 'should contain "var one = true;"');
         break;
-      case '1.bundle.js':
+      case '0.bundle.js':
         t.ok(/var chunk = true;/i.test(contents), 'should contain "var chunk = true;"');
         break;
     }
@@ -34,12 +36,14 @@ test('streams output assets', function (t) {
 test('multiple entry points', function (t) {
   t.plan(3);
   var stream = webpack({
-    entry: {
-      'one': path.join(base, 'entry.js'),
-      'two': path.join(base, 'anotherentrypoint.js')
-    },
-    output: {
-      filename: '[name].bundle.js'
+    config: {
+      entry: {
+        'one': path.join(base, 'entry.js'),
+        'two': path.join(base, 'anotherentrypoint.js')
+      },
+      output: {
+        filename: '[name].bundle.js'
+      }
     },
     quiet: true
   });
@@ -62,7 +66,10 @@ test('multiple entry points', function (t) {
 test('stream multiple entry points', function (t) {
   t.plan(3);
   var entries = fs.src(['test/fixtures/entry.js', 'test/fixtures/anotherentrypoint.js']);
-  var stream = webpack({quiet: true});
+  var stream = webpack({
+    config: {},
+    quiet: true
+  });
   stream.on('data', function (file) {
     var basename = path.basename(file.path);
     var contents = file.contents.toString();
@@ -83,7 +90,10 @@ test('empty input stream', function (t) {
   t.plan(1);
 
   var entry = fs.src('test/path/to/nothing', { allowEmpty: true });
-  var stream = webpack({quiet: true});
+  var stream = webpack({
+    config: {},
+    quiet: true
+  });
   var data = null;
 
   stream.on('data', function (file) {

@@ -53,7 +53,7 @@ module.exports = function (options, wp, done) {
           colors: gutil.colors.supportsColor
         }));
       } else {
-        var statsOptions = options && options.stats || {};
+        var statsOptions = (options && options.stats) || {};
 
         Object.keys(defaultStatsOptions).forEach(function (key) {
           if (typeof statsOptions[key] === 'undefined') {
