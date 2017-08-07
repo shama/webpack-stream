@@ -3,6 +3,7 @@
 var gutil = require('gulp-util');
 var File = require('vinyl');
 var MemoryFileSystem = require('memory-fs');
+var nodePath = require('path');
 var through = require('through');
 var ProgressPlugin = require('webpack/lib/ProgressPlugin');
 var clone = require('lodash.clone');
@@ -218,7 +219,7 @@ function prepareFile (fs, compiler, outname) {
 
   var file = new File({
     base: compiler.outputPath,
-    path: path,
+    path: nodePath.join(compiler.outputPath, outname),
     contents: contents
   });
   return file;
