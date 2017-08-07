@@ -29,15 +29,15 @@
     "gulp-util": "^3.0.7",
     "lodash.clone": "^4.3.2",
     "lodash.some": "^4.2.2",
-    "memory-fs": "^0.3.0",
+    "memory-fs": "^0.4.1",
     "through": "^2.3.8",
-    "vinyl": "^1.1.0",
+    "vinyl": "^2.1.0",
     "webpack": "^1.12.9"
   },
   "devDependencies": {
     "gulp": "^3.9.0",
     "rimraf": "^2.4.4",
-    "semistandard": "^7.0.4",
+    "semistandard": "^11.0.0",
     "tape": "^4.2.2",
     "vinyl-fs": "^2.2.1",
     "vinyl-named": "^1.1.0"
