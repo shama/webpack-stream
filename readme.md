@@ -181,6 +181,8 @@ gulp.task('default', function() {
 ```
 
 ## Release History
+* Please check the [commit log](https://github.com/shama/webpack-stream/commits/master) in the future for release history.
+* 4.0.0 - Update `webpack` to `^3.4.1`. Update `memory-fs` and `vinyl` dependencies. Emit `compilation-error` instead of `error` when watching (@jeroennoten). Fix error when compiler throws an error (@renminghao). Fix error when stats is undefined (@Simek).
 * 3.2.0 - Ability to use multiple compilers (@saschagehlich).
 * 3.1.0 - Better error output (@hi-q).
 * 3.0.1 - Fix fonts being passed through streams (@mattlewis92).
