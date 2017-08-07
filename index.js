@@ -131,6 +131,7 @@ module.exports = function (options, wp, done) {
     var compiler = webpack(config, function (err, stats) {
       if (err) {
         self.emit('error', new gutil.PluginError('webpack-stream', err));
+        return;
       }
       var jsonStats = stats.toJson() || {};
       var errors = jsonStats.errors || [];
