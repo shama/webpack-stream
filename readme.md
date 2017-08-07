@@ -4,6 +4,11 @@ Run [webpack](https://github.com/webpack/webpack) as a stream to conveniently in
 
 [![NPM](https://nodei.co/npm/webpack-stream.png?downloads=true)](https://nodei.co/npm/webpack-stream/)
 
+
+## Installation
+If you have `npm` run the following command in the console `npm install --save-dev webpack-stream`
+
+
 ## Usage
 
 ```js
@@ -155,6 +160,22 @@ gulp.task('default', function() {
       cb();
     }))
     .pipe(sourcemaps.write('.'))
+    .pipe(gulp.dest('dist/'));
+});
+```
+
+#### Multi-compiler support
+
+Multiple compilers are supported, but instead of passing the webpack configuration directly, you have to wrap it in an object under the key 'config'.
+
+```js
+var gulp = require('gulp');
+var webpack = require('webpack-stream');
+gulp.task('default', function() {
+  return gulp.src('src/entry.js')
+    .pipe(webpack({
+      config : require('./webpack.config.js')
+    }))
     .pipe(gulp.dest('dist/'));
 });
 ```
