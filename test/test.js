@@ -86,6 +86,33 @@ test('stream multiple entry points', function (t) {
   entries.pipe(named()).pipe(stream);
 });
 
+test('stream and config entry points', function (t) {
+  t.plan(3);
+  var entries = fs.src('test/fixtures/entry.js');
+  var stream = webpack({
+    config: {
+      entry: {
+        'two': path.join(base, 'anotherentrypoint.js')
+      }
+    },
+    quiet: true
+  });
+  stream.on('data', function (file) {
+    var basename = path.basename(file.path);
+    var contents = file.contents.toString();
+    switch (basename) {
+      case 'entry.js':
+        t.ok(/__webpack_require__/i.test(contents), 'should contain "__webpack_require__"');
+        t.ok(/var one = true;/i.test(contents), 'should contain "var one = true;"');
+        break;
+      case 'two.js':
+        t.ok(/var anotherentrypoint = true;/i.test(contents), 'should contain "var anotherentrypoint = true;"');
+        break;
+    }
+  });
+  entries.pipe(named()).pipe(stream);
+});
+
 test('empty input stream', function (t) {
   t.plan(1);
 

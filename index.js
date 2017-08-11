@@ -7,7 +7,6 @@ var nodePath = require('path');
 var through = require('through');
 var ProgressPlugin = require('webpack/lib/ProgressPlugin');
 var clone = require('lodash.clone');
-var some = require('lodash.some');
 
 var defaultStatsOptions = {
   colors: gutil.colors.supportsColor,
@@ -80,8 +79,7 @@ module.exports = function (options, wp, done) {
       }
       entries[file.named].push(file.path);
     } else {
-      entry = entry || [];
-      entry.push(file.path);
+      entry = { main: file.path };
     }
   }, function () {
     var self = this;
@@ -100,7 +98,8 @@ module.exports = function (options, wp, done) {
         entry = entry[0] || entry;
       }
 
-      config.entry = config.entry || entry;
+      config.entry = Object.assign({}, config.entry, entry);
+      config.entry = Object.keys(config.entry).length === 0 ? [] : config.entry;
       config.output.path = config.output.path || process.cwd();
       config.output.filename = config.output.filename || '[hash].js';
       config.watch = options.watch;
@@ -197,14 +196,6 @@ module.exports = function (options, wp, done) {
       handleCompiler(compiler);
     }
   });
-
-  // If entry point manually specified, trigger that
-  var hasEntry = Array.isArray(config)
-    ? some(config, function (c) { return c.entry; })
-    : config.entry;
-  if (hasEntry) {
-    stream.end();
-  }
 
   return stream;
 };
