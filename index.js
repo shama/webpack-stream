@@ -90,7 +90,13 @@ module.exports = function (options, wp, done) {
       config.watch = !!options.watch;
 
       // Determine pipe'd in entry
-      if (Object.keys(entries).length > 0) {
+      var entriesNames = Object.keys(entries);
+      if (entriesNames.length > 0) {
+        entriesNames.forEach(function (entryName) {
+          if (entries[entryName].length === 1) {
+            entries[entryName] = entries[entryName][0];
+          }
+        });
         entry = entries;
         if (!config.output.filename) {
           // Better output default for multiple chunks
