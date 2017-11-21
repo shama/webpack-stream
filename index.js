@@ -25,7 +25,7 @@ var defaultStatsOptions = {
   errorDetails: false
 };
 
-function validEntry(entry) {
+function validEntry (entry) {
   if (!entry) {
     return false;
   }
