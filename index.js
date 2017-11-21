@@ -25,6 +25,27 @@ var defaultStatsOptions = {
   errorDetails: false
 };
 
+function validEntry (entry) {
+  if (!entry) {
+    return false;
+  }
+
+  // Arrays and strings
+  if (entry.length > 1) {
+    return true;
+  }
+
+  var type = typeof entry;
+
+  // Objects and promises
+  if (type === 'object' && !entry.then && Object.getOwnPropertyNames(entry)) {
+    return false;
+  }
+
+  // Functions
+  return type === 'function';
+}
+
 module.exports = function (options, wp, done) {
   options = clone(options) || {};
   var config = options.config || options;
@@ -106,7 +127,7 @@ module.exports = function (options, wp, done) {
       config.watch = options.watch;
       entry = [];
 
-      if (!config.entry || config.entry.length < 1) {
+      if (!validEntry(config.entry)) {
         gutil.log('webpack-stream - No files given; aborting compilation');
         self.emit('end');
         return false;
