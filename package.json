@@ -26,20 +26,20 @@
     ]
   },
   "dependencies": {
-    "gulp-util": "^3.0.7",
-    "lodash.clone": "^4.3.2",
-    "lodash.some": "^4.2.2",
+    "gulp-util": "^3.0.8",
+    "lodash.clone": "^4.5.0",
+    "lodash.some": "^4.6.0",
     "memory-fs": "^0.4.1",
     "through": "^2.3.8",
     "vinyl": "^2.1.0",
-    "webpack": "^3.4.1"
+    "webpack": "^3.8.1"
   },
   "devDependencies": {
-    "gulp": "^3.9.0",
-    "rimraf": "^2.4.4",
+    "gulp": "^3.9.1",
+    "rimraf": "^2.6.2",
     "semistandard": "^11.0.0",
-    "tape": "^4.2.2",
-    "vinyl-fs": "^2.2.1",
+    "tape": "^4.8.0",
+    "vinyl-fs": "^2.4.4",
     "vinyl-named": "^1.1.0"
   },
   "keywords": [
