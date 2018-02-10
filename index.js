@@ -1,6 +1,8 @@
 'use strict';
 
-var gutil = require('gulp-util');
+var fancyLog = require('fancy-log');
+var PluginError = require('plugin-error');
+var chalk = require('chalk');
 var File = require('vinyl');
 var MemoryFileSystem = require('memory-fs');
 var nodePath = require('path');
@@ -10,7 +12,7 @@ var clone = require('lodash.clone');
 var some = require('lodash.some');
 
 var defaultStatsOptions = {
-  colors: gutil.colors.supportsColor,
+  colors: chalk.supportsColor,
   hash: false,
   timings: false,
   chunks: false,
@@ -49,8 +51,8 @@ module.exports = function (options, wp, done) {
       }
 
       if (options.verbose) {
-        gutil.log(stats.toString({
-          colors: gutil.colors.supportsColor
+        fancyLog(stats.toString({
+          colors: chalk.supportsColor
         }));
       } else {
         var statsOptions = (options && options.stats) || {};
@@ -61,7 +63,7 @@ module.exports = function (options, wp, done) {
           }
         });
 
-        gutil.log(stats.toString(statsOptions));
+        fancyLog(stats.toString(statsOptions));
       }
     };
   }
@@ -107,7 +109,7 @@ module.exports = function (options, wp, done) {
       entry = [];
 
       if (!config.entry || config.entry.length < 1) {
-        gutil.log('webpack-stream - No files given; aborting compilation');
+        fancyLog('webpack-stream - No files given; aborting compilation');
         self.emit('end');
         return false;
       }
@@ -131,7 +133,7 @@ module.exports = function (options, wp, done) {
 
     var compiler = webpack(config, function (err, stats) {
       if (err) {
-        self.emit('error', new gutil.PluginError('webpack-stream', err));
+        self.emit('error', new PluginError('webpack-stream', err));
         return;
       }
       var jsonStats = stats ? stats.toJson() || {} : {};
@@ -141,7 +143,7 @@ module.exports = function (options, wp, done) {
           resultMessage += nextError.toString();
           return resultMessage;
         }, '');
-        var compilationError = new gutil.PluginError('webpack-stream', errorMessage);
+        var compilationError = new PluginError('webpack-stream', errorMessage);
         if (!options.watch) {
           self.emit('error', compilationError);
         }
@@ -152,7 +154,7 @@ module.exports = function (options, wp, done) {
       }
       done(err, stats);
       if (options.watch && !options.quiet) {
-        gutil.log('webpack is watching for changes');
+        fancyLog('webpack is watching for changes');
       }
     });
 
@@ -168,7 +170,7 @@ module.exports = function (options, wp, done) {
           percentage = Math.floor(percentage * 100);
           msg = percentage + '% ' + msg;
           if (percentage < 10) msg = ' ' + msg;
-          gutil.log('webpack', msg);
+          fancyLog('webpack', msg);
         }));
       }
 

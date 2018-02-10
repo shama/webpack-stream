@@ -26,10 +26,12 @@
     ]
   },
   "dependencies": {
-    "gulp-util": "^3.0.7",
+    "chalk": "^2.3.0",
+    "fancy-log": "^1.3.2",
     "lodash.clone": "^4.3.2",
     "lodash.some": "^4.2.2",
     "memory-fs": "^0.4.1",
+    "plugin-error": "^0.1.2",
     "through": "^2.3.8",
     "vinyl": "^2.1.0",
     "webpack": "^3.4.1"
