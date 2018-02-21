@@ -12,7 +12,7 @@ var clone = require('lodash.clone');
 var some = require('lodash.some');
 
 var defaultStatsOptions = {
-  colors: chalk.supportsColor,
+  colors: chalk.supportsColor.hasBasic,
   hash: false,
   timings: false,
   chunks: false,
