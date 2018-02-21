@@ -2,7 +2,7 @@
 
 var fancyLog = require('fancy-log');
 var PluginError = require('plugin-error');
-var chalk = require('chalk');
+var supportsColor = require('supports-color');
 var File = require('vinyl');
 var MemoryFileSystem = require('memory-fs');
 var nodePath = require('path');
@@ -12,7 +12,7 @@ var clone = require('lodash.clone');
 var some = require('lodash.some');
 
 var defaultStatsOptions = {
-  colors: chalk.supportsColor,
+  colors: supportsColor.stdout.hasBasic,
   hash: false,
   timings: false,
   chunks: false,
@@ -52,7 +52,7 @@ module.exports = function (options, wp, done) {
 
       if (options.verbose) {
         fancyLog(stats.toString({
-          colors: chalk.supportsColor
+          colors: supportsColor.stdout.hasBasic
         }));
       } else {
         var statsOptions = (options && options.stats) || {};
