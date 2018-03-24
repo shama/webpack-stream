@@ -12,8 +12,8 @@ If you have `npm` run the following command in the console `npm install --save-d
 ## Usage
 
 ```js
-var gulp = require('gulp');
-var webpack = require('webpack-stream');
+const gulp = require('gulp');
+const webpack = require('webpack-stream');
 gulp.task('default', function() {
   return gulp.src('src/entry.js')
     .pipe(webpack())
@@ -49,9 +49,9 @@ return gulp.src('src/entry.js')
 If you would like to use a different version of webpack than the one this plugin uses, pass in an optional 2nd argument:
 
 ```js
-var gulp = require('gulp');
-var webpack = require('webpack');
-var gulpWebpack = require('webpack-stream');
+const gulp = require('gulp');
+const webpack = require('webpack');
+const gulpWebpack = require('webpack-stream');
 gulp.task('default', function() {
   return gulp.src('src/entry.js')
     .pipe(gulpWebpack({}, webpack))
@@ -63,8 +63,8 @@ Pass in 3rd argument if you want to access the stats outputted from webpack when
 
 
 ```js
-var gulp = require('gulp');
-var webpack = require('webpack-stream');
+const gulp = require('gulp');
+const webpack = require('webpack-stream');
 gulp.task('default', function() {
   return gulp.src('src/entry.js')
     .pipe(webpack({
@@ -81,8 +81,8 @@ gulp.task('default', function() {
 A common request is how to handle multiple entry points. You can continue to pass in an `entry` option in your typical webpack config like so:
 
 ```js
-var gulp = require('gulp');
-var webpack = require('webpack-stream');
+const gulp = require('gulp');
+const webpack = require('webpack-stream');
 gulp.task('default', function() {
   return gulp.src('src/entry.js')
     .pipe(webpack({
@@ -101,9 +101,9 @@ gulp.task('default', function() {
 Or pipe files through a stream that names the chunks. A convenient library for this is [vinyl-named](https://github.com/shama/vinyl-named):
 
 ```js
-var gulp = require('gulp');
-var webpack = require('webpack-stream');
-var named = require('vinyl-named');
+const gulp = require('gulp');
+const webpack = require('webpack-stream');
+const named = require('vinyl-named');
 gulp.task('default', function() {
   return gulp.src(['src/app.js', 'test/test.js'])
     .pipe(named())
@@ -119,9 +119,9 @@ The above `named()` stream will add a `.named` property to the vinyl files passi
 Source maps are built into webpack, specify a [devtool](https://webpack.github.io/docs/configuration.html#devtool):
 
 ```js
-var gulp = require('gulp');
-var webpack = require('webpack-stream');
-var named = require('vinyl-named');
+const gulp = require('gulp');
+const webpack = require('webpack-stream');
+const named = require('vinyl-named');
 gulp.task('default', function() {
   return gulp.src(['src/app.js', 'test/test.js'])
     .pipe(named())
@@ -140,11 +140,11 @@ If you need further special handling of source maps, such as using with
 to a stream and handle the source map files emitted by webpack:
 
 ```js
-var gulp = require('gulp');
-var webpack = require('webpack-stream');
-var named = require('vinyl-named');
-var through = require('through2');
-var sourcemaps = require('gulp-sourcemaps');
+const gulp = require('gulp');
+const webpack = require('webpack-stream');
+const named = require('vinyl-named');
+const through = require('through2');
+const sourcemaps = require('gulp-sourcemaps');
 gulp.task('default', function() {
   return gulp.src(['src/app.js', 'test/test.js'])
     .pipe(named())
@@ -155,7 +155,7 @@ gulp.task('default', function() {
     .pipe(through.obj(function (file, enc, cb) {
       // Dont pipe through any source map files as it will be handled
       // by gulp-sourcemaps
-      var isSourceMap = /\.map$/.test(file.path);
+      const isSourceMap = /\.map$/.test(file.path);
       if (!isSourceMap) this.push(file);
       cb();
     }))
@@ -169,8 +169,8 @@ gulp.task('default', function() {
 Multiple compilers are supported, but instead of passing the webpack configuration directly, you have to wrap it in an object under the key 'config'.
 
 ```js
-var gulp = require('gulp');
-var webpack = require('webpack-stream');
+const gulp = require('gulp');
+const webpack = require('webpack-stream');
 gulp.task('default', function() {
   return gulp.src('src/entry.js')
     .pipe(webpack({
