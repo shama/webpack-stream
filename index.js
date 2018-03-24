@@ -176,7 +176,11 @@ module.exports = function (options, wp, done) {
 
       var fs = compiler.outputFileSystem = new MemoryFileSystem();
 
-      compiler.plugin('after-emit', function (compilation, callback) {
+      var afterEmitPlugin = compiler.hooks ?
+        function (callback) { compiler.hooks.afterEmit.tapAsync('WebpackStream', callback); } : // Webpack 4
+        function (callback) { compiler.plugin('after-emit', callback); }; // Webpack 2/3
+
+      afterEmitPlugin(function (compilation, callback) {
         Object.keys(compilation.assets).forEach(function (outname) {
           if (compilation.assets[outname].emitted) {
             var file = prepareFile(fs, compiler, outname);
