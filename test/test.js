@@ -152,3 +152,38 @@ test('no options', function (t) {
   });
   stream.end();
 });
+
+test('error formatting', function (t) {
+  t.plan(2);
+  var expectedMessage =
+    './test/fixtures/entry.js\n' +
+    'Fake error\n' +
+    './test/fixtures/one.js\n' +
+    'Fake error\n' +
+    ' @ ./test/fixtures/entry.js 3:10-29\n' +
+    './test/fixtures/chunk.js\n' +
+    'Fake error\n' +
+    ' @ ./test/fixtures/entry.js 4:0-6:2';
+  var entry = fs.src('test/fixtures/entry.js');
+  var stream = webpack({
+    quiet: true,
+    config: {
+      module: {
+        rules: [
+          {
+            test: /\.js$/,
+            enforce: 'pre',
+            use: './test/fake-error-loader'
+          }
+        ]
+      }
+    }
+  });
+  stream.on('error', function (err) {
+    t.equal(err.message, expectedMessage, 'error message');
+  });
+  stream.on('compilation-error', function (err) {
+    t.equal(err.message, expectedMessage, 'compilation-error message');
+  });
+  entry.pipe(stream);
+});

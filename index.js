@@ -139,10 +139,7 @@ module.exports = function (options, wp, done) {
       var jsonStats = stats ? stats.toJson() || {} : {};
       var errors = jsonStats.errors || [];
       if (errors.length) {
-        var errorMessage = errors.reduce(function (resultMessage, nextError) {
-          resultMessage += nextError.toString();
-          return resultMessage;
-        }, '');
+        var errorMessage = errors.join('\n');
         var compilationError = new PluginError('webpack-stream', errorMessage);
         if (!options.watch) {
           self.emit('error', compilationError);
