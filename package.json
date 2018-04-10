@@ -34,7 +34,7 @@
     "plugin-error": "^1.0.1",
     "through": "^2.3.8",
     "vinyl": "^2.1.0",
-    "webpack": "^3.4.1"
+    "webpack": "^4.5.0"
   },
   "devDependencies": {
     "gulp": "^3.9.0",
