@@ -14,7 +14,7 @@
     "node": ">= 0.10.0"
   },
   "scripts": {
-    "test": "semistandard && node test/test.js"
+    "test": "semistandard && npm-install-peers && node test/test.js"
   },
   "files": [
     "index.js"
@@ -33,16 +33,19 @@
     "memory-fs": "^0.4.1",
     "plugin-error": "^1.0.1",
     "through": "^2.3.8",
-    "vinyl": "^2.1.0",
-    "webpack": "^3.4.1"
+    "vinyl": "^2.1.0"
   },
   "devDependencies": {
     "gulp": "^3.9.0",
+    "npm-install-peers": "^1.2.1",
     "rimraf": "^2.4.4",
     "semistandard": "^12.0.1",
     "tape": "^4.9.0",
     "vinyl-fs": "^3.0.2",
     "vinyl-named": "^1.1.0"
+  },
+  "peerDependencies": {
+    "webpack": "*"
   },
   "keywords": [
     "gulpplugin",
