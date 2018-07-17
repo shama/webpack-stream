@@ -11,6 +11,7 @@ test('streams output assets', function (t) {
   var entry = fs.src('test/fixtures/entry.js');
   var stream = webpack({
     config: {
+      mode: 'development',
       output: {
         filename: 'bundle.js'
       }
@@ -37,6 +38,7 @@ test('multiple entry points', function (t) {
   t.plan(3);
   var stream = webpack({
     config: {
+      mode: 'development',
       entry: {
         'one': path.join(base, 'entry.js'),
         'two': path.join(base, 'anotherentrypoint.js')
@@ -67,7 +69,9 @@ test('stream multiple entry points', function (t) {
   t.plan(3);
   var entries = fs.src(['test/fixtures/entry.js', 'test/fixtures/anotherentrypoint.js']);
   var stream = webpack({
-    config: {},
+    config: {
+      mode: 'development'
+    },
     quiet: true
   });
   stream.on('data', function (file) {
@@ -113,6 +117,7 @@ test('multi-compile', function (t) {
   var stream = webpack({
     quiet: true,
     config: [{
+      mode: 'development',
       entry: {
         'one': path.join(base, 'entry.js')
       },
@@ -120,6 +125,7 @@ test('multi-compile', function (t) {
         filename: '[name].bundle.js'
       }
     }, {
+      mode: 'development',
       entry: {
         'two': path.join(base, 'anotherentrypoint.js')
       },
