@@ -180,11 +180,9 @@ module.exports = function (options, wp, done) {
         : function (callback) { compiler.plugin('after-emit', callback); };
 
       afterEmitPlugin(function (compilation, callback) {
-        Object.keys(compilation.assets).forEach(function (outname) {
-          if (compilation.assets[outname].emitted) {
-            var file = prepareFile(fs, compiler, outname);
-            self.queue(file);
-          }
+        fs.readdirSync(compiler.outputPath).forEach(function (outname) {
+          var file = prepareFile(fs, compiler, outname);
+          self.queue(file);
         });
         callback();
       });
