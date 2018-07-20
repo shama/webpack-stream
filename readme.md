@@ -30,7 +30,7 @@ return gulp.src('src/entry.js')
   .pipe(webpack({
     watch: true,
     module: {
-      loaders: [
+      rules: [
         { test: /\.css$/, loader: 'style!css' },
       ],
     },
