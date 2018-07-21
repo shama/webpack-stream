@@ -64,9 +64,9 @@ module.exports = function (options, wp, done) {
             }
           });
         }
-        var statusLog
-        if (statusLog = stats.toString(statsOptions)) {
-          fancyLog(statusLog)
+        var statusLog = stats.toString(statsOptions);
+        if (statusLog) {
+          fancyLog(statusLog);
         }
       }
     };
