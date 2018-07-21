@@ -64,8 +64,10 @@ module.exports = function (options, wp, done) {
             }
           });
         }
-
-        fancyLog(stats.toString(statsOptions));
+        var statusLog
+        if (statusLog = stats.toString(statsOptions)) {
+          fancyLog(statusLog)
+        }
       }
     };
   }
