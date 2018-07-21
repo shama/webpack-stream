@@ -57,11 +57,13 @@ module.exports = function (options, wp, done) {
       } else {
         var statsOptions = (options && options.stats) || {};
 
-        Object.keys(defaultStatsOptions).forEach(function (key) {
-          if (typeof statsOptions[key] === 'undefined') {
-            statsOptions[key] = defaultStatsOptions[key];
-          }
-        });
+        if (typeof statsOptions === 'object') {
+          Object.keys(defaultStatsOptions).forEach(function (key) {
+            if (typeof statsOptions[key] === 'undefined') {
+              statsOptions[key] = defaultStatsOptions[key];
+            }
+          });
+        }
 
         fancyLog(stats.toString(statsOptions));
       }
