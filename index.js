@@ -27,7 +27,16 @@ var defaultStatsOptions = {
   errorDetails: false
 };
 
+var cache = {};
+
 module.exports = function (options, wp, done) {
+  if (cache.wp !== wp || cache.options !== options) {
+    cache = {};
+  }
+
+  cache.options = options;
+  cache.wp = wp;
+
   options = clone(options) || {};
   var config = options.config || options;
   if (typeof done !== 'function') {
@@ -135,7 +144,11 @@ module.exports = function (options, wp, done) {
       }
     }
 
-    var compiler = webpack(config, function (err, stats) {
+    // Cache compiler for future use
+    var compiler = cache.compiler || webpack(config);
+    cache.compiler = compiler;
+
+    compiler.run(function (err, stats) {
       if (err) {
         self.emit('error', new PluginError('webpack-stream', err));
         return;
@@ -175,7 +188,9 @@ module.exports = function (options, wp, done) {
         }));
       }
 
-      var fs = compiler.outputFileSystem = new MemoryFileSystem();
+      cache.mfs = cache.mfs || new MemoryFileSystem();
+
+      var fs = compiler.outputFileSystem = cache.mfs;
 
       var afterEmitPlugin = compiler.hooks
         // Webpack 4
