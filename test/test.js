@@ -69,12 +69,15 @@ test('subsequent runs served from cache', function (t) {
   t.plan(4);
 
   var config = {
-    entry: {
-      'one': path.join(base, 'entry.js'),
-      'two': path.join(base, 'anotherentrypoint.js')
-    },
-    output: {
-      filename: '[name].bundle.js'
+    config: {
+      mode: 'development',
+      entry: {
+        'one': path.join(base, 'entry.js'),
+        'two': path.join(base, 'anotherentrypoint.js')
+      },
+      output: {
+        filename: '[name].bundle.js'
+      }
     },
     quiet: true
   };
