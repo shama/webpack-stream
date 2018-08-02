@@ -180,12 +180,12 @@ module.exports = function (options, wp, done) {
       }
 
       if (options.progress) {
-        compiler.apply(new ProgressPlugin(function (percentage, msg) {
+        (new ProgressPlugin(function (percentage, msg) {
           percentage = Math.floor(percentage * 100);
           msg = percentage + '% ' + msg;
           if (percentage < 10) msg = ' ' + msg;
           fancyLog('webpack', msg);
-        }));
+        })).apply(compiler);
       }
 
       cache.mfs = cache.mfs || new MemoryFileSystem();
