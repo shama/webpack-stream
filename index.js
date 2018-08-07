@@ -148,7 +148,7 @@ module.exports = function (options, wp, done) {
     var compiler = cache.compiler || webpack(config);
     cache.compiler = compiler;
 
-    compiler.run(function (err, stats) {
+    const callback = function (err, stats) {
       if (err) {
         self.emit('error', new PluginError('webpack-stream', err));
         return;
@@ -170,15 +170,16 @@ module.exports = function (options, wp, done) {
       if (options.watch && !options.quiet) {
         fancyLog('webpack is watching for changes');
       }
-    });
+    };
+
+    if (options.watch) {
+      const watchOptions = {};
+      compiler.watch(watchOptions, callback);
+    } else {
+      compiler.run(callback);
+    }
 
     var handleCompiler = function (compiler) {
-      // In watch mode webpack returns a wrapper object so we need to get
-      // the underlying compiler
-      if (options.watch && compiler.compiler) {
-        compiler = compiler.compiler;
-      }
-
       if (options.progress) {
         (new ProgressPlugin(function (percentage, msg) {
           percentage = Math.floor(percentage * 100);
@@ -209,11 +210,7 @@ module.exports = function (options, wp, done) {
       });
     };
 
-    if (Array.isArray(options.config) && options.watch) {
-      compiler.watchings.forEach(function (compiler) {
-        handleCompiler(compiler);
-      });
-    } else if (Array.isArray(options.config)) {
+    if (Array.isArray(options.config)) {
       compiler.compilers.forEach(function (compiler) {
         handleCompiler(compiler);
       });
