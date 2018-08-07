@@ -1,6 +1,6 @@
 {
   "name": "webpack-stream",
-  "version": "5.1.0",
+  "version": "5.1.1",
   "description": "Run webpack as a stream",
   "license": "MIT",
   "homepage": "https://github.com/shama/webpack-stream",
@@ -16,14 +16,9 @@
   "scripts": {
     "test": "semistandard && node test/test.js"
   },
-  "files": [
-    "index.js"
-  ],
+  "files": ["index.js"],
   "semistandard": {
-    "ignore": [
-      "test/fixtures",
-      "examples"
-    ]
+    "ignore": ["test/fixtures", "examples"]
   },
   "dependencies": {
     "fancy-log": "^1.3.2",
@@ -44,9 +39,5 @@
     "vinyl-fs": "^3.0.2",
     "vinyl-named": "^1.1.0"
   },
-  "keywords": [
-    "gulpplugin",
-    "webpack",
-    "stream"
-  ]
+  "keywords": ["gulpplugin", "webpack", "stream"]
 }
