@@ -26,8 +26,6 @@ var defaultStatsOptions = {
   errorDetails: false
 };
 
-
-
 module.exports = function (options, wp, done) {
   var cache = {
     options: options,
