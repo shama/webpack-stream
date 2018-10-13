@@ -26,15 +26,13 @@ var defaultStatsOptions = {
   errorDetails: false
 };
 
-var cache = {};
+
 
 module.exports = function (options, wp, done) {
-  if (cache.wp !== wp || cache.options !== options) {
-    cache = {};
-  }
-
-  cache.options = options;
-  cache.wp = wp;
+  var cache = {
+    options: options,
+    wp: wp
+  };
 
   options = clone(options) || {};
   var config = options.config || options;
