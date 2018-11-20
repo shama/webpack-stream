@@ -116,7 +116,6 @@ module.exports = function (options, wp, done) {
 
       config.entry = config.entry || entry;
       config.output.path = config.output.path || process.cwd();
-      config.output.filename = config.output.filename || '[hash].js';
       config.watch = options.watch;
       entry = [];
 
