@@ -172,7 +172,7 @@ module.exports = function (options, wp, done) {
     };
 
     if (options.watch) {
-      const watchOptions = {};
+      const watchOptions = options.watchOptions || {};
       compiler.watch(watchOptions, callback);
     } else {
       compiler.run(callback);
