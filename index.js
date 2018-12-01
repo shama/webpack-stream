@@ -38,6 +38,14 @@ module.exports = function (options, wp, done) {
 
   options = clone(options) || {};
   var config = options.config || options;
+
+  /**
+   * Webpack 4 doesn't support the `quiet` attribute, however supports
+   * setting `stats` to a string within an array of configurations
+   * (errors-only|minimal|none|normal|verbose)
+   */
+  const isSilent = options.quiet || (options.stats && (options.stats.match(/^(errors-only|minimal|none)$/)));
+
   if (typeof done !== 'function') {
     var callingDone = false;
     done = function (err, stats) {
@@ -46,7 +54,7 @@ module.exports = function (options, wp, done) {
         return;
       }
       stats = stats || {};
-      if (options.quiet || callingDone) {
+      if (isSilent || callingDone) {
         return;
       }
 
@@ -166,7 +174,7 @@ module.exports = function (options, wp, done) {
         self.queue(null);
       }
       done(err, stats);
-      if (options.watch && !options.quiet) {
+      if (options.watch && !isSilent) {
         fancyLog('webpack is watching for changes');
       }
     };
