@@ -39,12 +39,11 @@ module.exports = function (options, wp, done) {
   options = clone(options) || {};
   var config = options.config || options;
 
-  /**
-   * Webpack 4 doesn't support the `quiet` attribute, however supports
-   * setting `stats` to a string within an array of configurations
-   * (errors-only|minimal|none|normal|verbose)
-   */
-  const isSilent = options.quiet || (options.stats && (options.stats.match(/^(errors-only|minimal|none)$/)));
+  // Webpack 4 doesn't support the `quiet` attribute, however supports
+  // setting `stats` to a string within an array of configurations
+  // (errors-only|minimal|none|normal|verbose) or an object with an absurd
+  // amount of config
+  const isSilent = options.quiet || (typeof options.stats === 'string' && (options.stats.match(/^(errors-only|minimal|none)$/)));
 
   if (typeof done !== 'function') {
     var callingDone = false;
