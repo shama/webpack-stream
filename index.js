@@ -223,6 +223,19 @@ module.exports = function (options, wp, done) {
     } else {
       handleCompiler(compiler);
     }
+
+    if (options.watch && !isSilent) {
+      const watchRunPlugin = compiler.hooks
+        // Webpack 4
+        ? callback => compiler.hooks.watchRun.tapAsync('WebpackInfo', callback)
+        // Webpack 2/3
+        : callback => compiler.plugin('watch-run', callback);
+
+      watchRunPlugin((compilation, callback) => {
+        fancyLog('webpack compilation starting...');
+        callback();
+      });
+    }
   });
 
   // If entry point manually specified, trigger that
