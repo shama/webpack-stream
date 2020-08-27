@@ -40,8 +40,8 @@ test('multiple entry points', function (t) {
     config: {
       mode: 'development',
       entry: {
-        'one': path.join(base, 'entry.js'),
-        'two': path.join(base, 'anotherentrypoint.js')
+        one: path.join(base, 'entry.js'),
+        two: path.join(base, 'anotherentrypoint.js')
       },
       output: {
         filename: '[name].bundle.js'
@@ -119,7 +119,7 @@ test('multi-compile', function (t) {
     config: [{
       mode: 'development',
       entry: {
-        'one': path.join(base, 'entry.js')
+        one: path.join(base, 'entry.js')
       },
       output: {
         filename: '[name].bundle.js'
@@ -127,7 +127,7 @@ test('multi-compile', function (t) {
     }, {
       mode: 'development',
       entry: {
-        'two': path.join(base, 'anotherentrypoint.js')
+        two: path.join(base, 'anotherentrypoint.js')
       },
       output: {
         filename: '[name].bundle.js'
