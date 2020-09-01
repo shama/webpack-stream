@@ -195,19 +195,15 @@ module.exports = function (options, wp, done) {
 
       var fs = compiler.outputFileSystem = cache.mfs;
 
-      var afterEmitPlugin = compiler.hooks
+      var assetEmittedPlugin = compiler.hooks
         // Webpack 4
-        ? function (callback) { compiler.hooks.afterEmit.tapAsync('WebpackStream', callback); }
+        ? function (callback) { compiler.hooks.assetEmitted.tapAsync('WebpackStream', callback); }
         // Webpack 2/3
-        : function (callback) { compiler.plugin('after-emit', callback); };
+        : function (callback) { compiler.plugin('asset-emitted', callback); };
 
-      afterEmitPlugin(function (compilation, callback) {
-        Object.keys(compilation.assets).forEach(function (outname) {
-          if (compilation.assets[outname].emitted) {
-            var file = prepareFile(fs, compiler, outname);
-            self.queue(file);
-          }
-        });
+      assetEmittedPlugin(function (outname, _, callback) {
+        var file = prepareFile(fs, compiler, outname);
+        self.queue(file);
         callback();
       });
     };
