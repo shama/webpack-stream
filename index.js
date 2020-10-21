@@ -158,7 +158,28 @@ module.exports = function (options, wp, done) {
       var jsonStats = stats ? stats.toJson() || {} : {};
       var errors = jsonStats.errors || [];
       if (errors.length) {
-        var errorMessage = errors.join('\n');
+        const resolveErrorMessage = (err) => {
+          if (
+            typeof err === 'object' &&
+            err !== null &&
+            Object.prototype.hasOwnProperty.call(err, 'message')
+          ) {
+            return err.message;
+          } else if (
+            typeof err === 'object' &&
+            err !== null &&
+            'toString' in err &&
+            err.toString() !== '[object Object]'
+          ) {
+            return err.toString();
+          } else if (Array.isArray(err)) {
+            return err.map(resolveErrorMessage).join('\n');
+          } else {
+            return err;
+          }
+        };
+
+        var errorMessage = errors.map(resolveErrorMessage).join('\n');
         var compilationError = new PluginError('webpack-stream', errorMessage);
         if (!options.watch) {
           self.emit('error', compilationError);
