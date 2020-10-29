@@ -34,7 +34,7 @@
     "supports-color": "^7.2.0",
     "through": "^2.3.8",
     "vinyl": "^2.1.0",
-    "webpack": "^4.26.1"
+    "webpack": ">=4.26.1"
   },
   "devDependencies": {
     "gulp": "^4.0.2",
