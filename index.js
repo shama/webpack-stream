@@ -104,7 +104,6 @@ module.exports = function (options, wp, done) {
     var self = this;
     var handleConfig = function (config) {
       config.output = config.output || {};
-      config.watch = !!options.watch;
 
       // Determine pipe'd in entry
       if (Object.keys(entries).length > 0) {
@@ -120,7 +119,6 @@ module.exports = function (options, wp, done) {
       config.entry = config.entry || entry;
       config.output.path = config.output.path || process.cwd();
       config.output.filename = config.output.filename || '[hash].js';
-      config.watch = options.watch;
       entry = [];
 
       if (!config.entry || config.entry.length < 1) {
