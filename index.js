@@ -35,6 +35,9 @@ module.exports = function (options, wp, done) {
   options = clone(options) || {};
   var config = options.config || options;
 
+  const isInWatchMode = !!options.watch;
+  delete options.watch;
+
   // Webpack 4 doesn't support the `quiet` attribute, however supports
   // setting `stats` to a string within an array of configurations
   // (errors-only|minimal|none|normal|verbose) or an object with an absurd
@@ -54,7 +57,7 @@ module.exports = function (options, wp, done) {
       }
 
       // Debounce output a little for when in watch mode
-      if (options.watch) {
+      if (isInWatchMode) {
         callingDone = true;
         setTimeout(function () {
           callingDone = false;
@@ -104,7 +107,6 @@ module.exports = function (options, wp, done) {
     var self = this;
     var handleConfig = function (config) {
       config.output = config.output || {};
-      config.watch = !!options.watch;
 
       // Determine pipe'd in entry
       if (Object.keys(entries).length > 0) {
@@ -120,7 +122,6 @@ module.exports = function (options, wp, done) {
       config.entry = config.entry || entry;
       config.output.path = config.output.path || process.cwd();
       config.output.filename = config.output.filename || '[hash].js';
-      config.watch = options.watch;
       entry = [];
 
       if (!config.entry || config.entry.length < 1) {
@@ -181,21 +182,21 @@ module.exports = function (options, wp, done) {
 
         var errorMessage = errors.map(resolveErrorMessage).join('\n');
         var compilationError = new PluginError('webpack-stream', errorMessage);
-        if (!options.watch) {
+        if (!isInWatchMode) {
           self.emit('error', compilationError);
         }
         self.emit('compilation-error', compilationError);
       }
-      if (!options.watch) {
+      if (!isInWatchMode) {
         self.queue(null);
       }
       done(err, stats);
-      if (options.watch && !isSilent) {
+      if (isInWatchMode && !isSilent) {
         fancyLog('webpack is watching for changes');
       }
     };
 
-    if (options.watch) {
+    if (isInWatchMode) {
       const watchOptions = options.watchOptions || {};
       compiler.watch(watchOptions, callback);
     } else {

@@ -14,6 +14,8 @@
     "node": ">= 8.0.0"
   },
   "scripts": {
+    "start": "gulp",
+    "debug": "node --inspect-brk ./node_modules/.bin/gulp",
     "test": "semistandard && node test/test.js"
   },
   "files": [
