@@ -34,6 +34,7 @@ module.exports = function (options, wp, done) {
 
   options = clone(options) || {};
   var config = options.config || options;
+  delete config.watch;
 
   // Webpack 4 doesn't support the `quiet` attribute, however supports
   // setting `stats` to a string within an array of configurations
