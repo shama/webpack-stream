@@ -163,7 +163,7 @@ test('error formatting', function (t) {
   t.plan(2);
   // TODO: Fix this to test to rely less on large string outputs as those can change
   // and still be ok.
-  var expectedMessage = '\x1b[31mError\x1b[39m in plugin "\x1b[36mwebpack-stream\x1b[39m"\nMessage:\n    ./test/fixtures/entry.js\nModule Error (from ./test/fak';
+  var expectedMessage = '\x1b[31mError\x1b[39m in plugin "\x1b[36mwebpack-stream\x1b[39m"\nMessage:\n    Module Error (from ./test/fake-error-loader.js):\nFake ';
   var entry = fs.src('test/fixtures/entry.js');
   var stream = webpack({
     quiet: true,
