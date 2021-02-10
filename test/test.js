@@ -26,7 +26,7 @@ test('streams output assets', function (t) {
         t.ok(/__webpack_require__/i.test(contents), 'should contain "__webpack_require__"');
         t.ok(/var one = true;/i.test(contents), 'should contain "var one = true;"');
         break;
-      case '0.bundle.js':
+      case 'test_fixtures_chunk_js.bundle.js':
         t.ok(/var chunk = true;/i.test(contents), 'should contain "var chunk = true;"');
         break;
     }
