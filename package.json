@@ -43,7 +43,8 @@
     "semistandard": "^14.2.3",
     "tape": "^5.0.1",
     "vinyl-fs": "^3.0.2",
-    "vinyl-named": "^1.1.0"
+    "vinyl-named": "^1.1.0",
+    "webpack": "^4.26.1"
   },
   "peerDependencies": {
     "webpack": "^4.26.1"
