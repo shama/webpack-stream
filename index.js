@@ -121,7 +121,7 @@ module.exports = function (options, wp, done) {
 
       config.entry = config.entry || entry;
       config.output.path = config.output.path || process.cwd();
-      config.output.filename = config.output.filename || '[hash].js';
+      config.output.filename = config.output.filename || '[contenthash].js';
       entry = [];
 
       if (!config.entry || config.entry.length < 1) {
