@@ -1,16 +1,16 @@
 'use strict';
 
-var fancyLog = require('fancy-log');
-var PluginError = require('plugin-error');
-var supportsColor = require('supports-color');
-var File = require('vinyl');
-var MemoryFileSystem = require('memory-fs');
-var nodePath = require('path');
-var through = require('through');
-var ProgressPlugin = require('webpack/lib/ProgressPlugin');
-var clone = require('lodash.clone');
+const fancyLog = require('fancy-log');
+const PluginError = require('plugin-error');
+const supportsColor = require('supports-color');
+const File = require('vinyl');
+const MemoryFileSystem = require('memory-fs');
+const nodePath = require('path');
+const through = require('through');
+const ProgressPlugin = require('webpack/lib/ProgressPlugin');
+const clone = require('lodash.clone');
 
-var defaultStatsOptions = {
+const defaultStatsOptions = {
   colors: supportsColor.stdout.hasBasic,
   hash: false,
   timings: false,
@@ -26,32 +26,42 @@ var defaultStatsOptions = {
   errorDetails: false
 };
 
-var cache = {};
-
 module.exports = function (options, wp, done) {
-  if (cache.wp !== wp || cache.options !== options) {
-    cache = {};
-  }
-
-  cache.options = options;
-  cache.wp = wp;
+  const cache = {
+    options: options,
+    wp: wp
+  };
 
   options = clone(options) || {};
-  var config = options.config || options;
+  const config = options.config || options;
+
+  const isInWatchMode = !!options.watch;
+  delete options.watch;
+
+  if (typeof config === 'string') {
+    config = require(config);
+  }
+
+  // Webpack 4 doesn't support the `quiet` attribute, however supports
+  // setting `stats` to a string within an array of configurations
+  // (errors-only|minimal|none|normal|verbose) or an object with an absurd
+  // amount of config
+  const isSilent = options.quiet || (typeof options.stats === 'string' && (options.stats.match(/^(errors-only|minimal|none)$/)));
+
   if (typeof done !== 'function') {
-    var callingDone = false;
+    let callingDone = false;
     done = function (err, stats) {
       if (err) {
         // The err is here just to match the API but isnt used
         return;
       }
       stats = stats || {};
-      if (options.quiet || callingDone) {
+      if (isSilent || callingDone) {
         return;
       }
 
       // Debounce output a little for when in watch mode
-      if (options.watch) {
+      if (isInWatchMode) {
         callingDone = true;
         setTimeout(function () {
           callingDone = false;
@@ -63,7 +73,7 @@ module.exports = function (options, wp, done) {
           colors: supportsColor.stdout.hasBasic
         }));
       } else {
-        var statsOptions = (options && options.stats) || {};
+        const statsOptions = (options && options.stats) || {};
 
         if (typeof statsOptions === 'object') {
           Object.keys(defaultStatsOptions).forEach(function (key) {
@@ -72,7 +82,7 @@ module.exports = function (options, wp, done) {
             }
           });
         }
-        var statusLog = stats.toString(statsOptions);
+        const statusLog = stats.toString(statsOptions);
         if (statusLog) {
           fancyLog(statusLog);
         }
@@ -80,11 +90,11 @@ module.exports = function (options, wp, done) {
     };
   }
 
-  var webpack = wp || require('webpack');
-  var entry = [];
-  var entries = Object.create(null);
+  const webpack = wp || require('webpack');
+  let entry = [];
+  const entries = Object.create(null);
 
-  var stream = through(function (file) {
+  const stream = through(function (file) {
     if (file.isNull()) {
       return;
     }
@@ -98,10 +108,9 @@ module.exports = function (options, wp, done) {
       entry.push(file.path);
     }
   }, function () {
-    var self = this;
-    var handleConfig = function (config) {
+    const self = this;
+    const handleConfig = function (config) {
       config.output = config.output || {};
-      config.watch = !!options.watch;
 
       // Determine pipe'd in entry
       if (Object.keys(entries).length > 0) {
@@ -127,9 +136,9 @@ module.exports = function (options, wp, done) {
       return true;
     };
 
-    var succeeded;
+    let succeeded;
     if (Array.isArray(config)) {
-      for (var i = 0; i < config.length; i++) {
+      for (let i = 0; i < config.length; i++) {
         succeeded = handleConfig(config[i]);
         if (!succeeded) {
           return false;
@@ -143,7 +152,7 @@ module.exports = function (options, wp, done) {
     }
 
     // Cache compiler for future use
-    var compiler = cache.compiler || webpack(config);
+    const compiler = cache.compiler || webpack(config);
     cache.compiler = compiler;
 
     const callback = function (err, stats) {
@@ -151,33 +160,54 @@ module.exports = function (options, wp, done) {
         self.emit('error', new PluginError('webpack-stream', err));
         return;
       }
-      var jsonStats = stats ? stats.toJson() || {} : {};
-      var errors = jsonStats.errors || [];
+      const jsonStats = stats ? stats.toJson() || {} : {};
+      const errors = jsonStats.errors || [];
       if (errors.length) {
-        var errorMessage = errors.join('\n');
-        var compilationError = new PluginError('webpack-stream', errorMessage);
-        if (!options.watch) {
+        const resolveErrorMessage = (err) => {
+          if (
+            typeof err === 'object' &&
+            err !== null &&
+            Object.prototype.hasOwnProperty.call(err, 'message')
+          ) {
+            return err.message;
+          } else if (
+            typeof err === 'object' &&
+            err !== null &&
+            'toString' in err &&
+            err.toString() !== '[object Object]'
+          ) {
+            return err.toString();
+          } else if (Array.isArray(err)) {
+            return err.map(resolveErrorMessage).join('\n');
+          } else {
+            return err;
+          }
+        };
+
+        const errorMessage = errors.map(resolveErrorMessage).join('\n');
+        const compilationError = new PluginError('webpack-stream', errorMessage);
+        if (!isInWatchMode) {
           self.emit('error', compilationError);
         }
         self.emit('compilation-error', compilationError);
       }
-      if (!options.watch) {
+      if (!isInWatchMode) {
         self.queue(null);
       }
       done(err, stats);
-      if (options.watch && !options.quiet) {
+      if (isInWatchMode && !isSilent) {
         fancyLog('webpack is watching for changes');
       }
     };
 
-    if (options.watch) {
-      const watchOptions = {};
+    if (isInWatchMode) {
+      const watchOptions = options.watchOptions || {};
       compiler.watch(watchOptions, callback);
     } else {
       compiler.run(callback);
     }
 
-    var handleCompiler = function (compiler) {
+    const handleCompiler = function (compiler) {
       if (options.progress) {
         (new ProgressPlugin(function (percentage, msg) {
           percentage = Math.floor(percentage * 100);
@@ -189,21 +219,17 @@ module.exports = function (options, wp, done) {
 
       cache.mfs = cache.mfs || new MemoryFileSystem();
 
-      var fs = compiler.outputFileSystem = cache.mfs;
+      const fs = compiler.outputFileSystem = cache.mfs;
 
-      var afterEmitPlugin = compiler.hooks
+      const assetEmittedPlugin = compiler.hooks
         // Webpack 4
-        ? function (callback) { compiler.hooks.afterEmit.tapAsync('WebpackStream', callback); }
+        ? function (callback) { compiler.hooks.assetEmitted.tapAsync('WebpackStream', callback); }
         // Webpack 2/3
-        : function (callback) { compiler.plugin('after-emit', callback); };
+        : function (callback) { compiler.plugin('asset-emitted', callback); };
 
-      afterEmitPlugin(function (compilation, callback) {
-        Object.keys(compilation.assets).forEach(function (outname) {
-          if (compilation.assets[outname].emitted) {
-            var file = prepareFile(fs, compiler, outname);
-            self.queue(file);
-          }
-        });
+      assetEmittedPlugin(function (outname, _, callback) {
+        const file = prepareFile(fs, compiler, outname);
+        self.queue(file);
         callback();
       });
     };
@@ -215,10 +241,23 @@ module.exports = function (options, wp, done) {
     } else {
       handleCompiler(compiler);
     }
+
+    if (options.watch && !isSilent) {
+      const watchRunPlugin = compiler.hooks
+        // Webpack 4
+        ? callback => compiler.hooks.watchRun.tapAsync('WebpackInfo', callback)
+        // Webpack 2/3
+        : callback => compiler.plugin('watch-run', callback);
+
+      watchRunPlugin((compilation, callback) => {
+        fancyLog('webpack compilation starting...');
+        callback();
+      });
+    }
   });
 
   // If entry point manually specified, trigger that
-  var hasEntry = Array.isArray(config)
+  const hasEntry = Array.isArray(config)
     ? config.some(function (c) { return c.entry; })
     : config.entry;
   if (hasEntry) {
@@ -229,14 +268,14 @@ module.exports = function (options, wp, done) {
 };
 
 function prepareFile (fs, compiler, outname) {
-  var path = fs.join(compiler.outputPath, outname);
+  let path = fs.join(compiler.outputPath, outname);
   if (path.indexOf('?') !== -1) {
     path = path.split('?')[0];
   }
 
-  var contents = fs.readFileSync(path);
+  const contents = fs.readFileSync(path);
 
-  var file = new File({
+  const file = new File({
     base: compiler.outputPath,
     path: nodePath.join(compiler.outputPath, outname),
     contents: contents
