@@ -33,15 +33,15 @@
     "lodash.some": "^4.2.2",
     "memory-fs": "^0.5.0",
     "plugin-error": "^1.0.1",
-    "supports-color": "^7.2.0",
+    "supports-color": "^8.1.1",
     "through": "^2.3.8",
-    "vinyl": "^2.1.0"
+    "vinyl": "^2.2.1"
   },
   "devDependencies": {
     "gulp": "^4.0.2",
     "rimraf": "^3.0.2",
     "semistandard": "^16.0.1",
-    "tape": "^5.0.1",
+    "tape": "^5.3.1",
     "vinyl-fs": "^3.0.2",
     "vinyl-named": "^1.1.0",
     "webpack": "^5.21.2"
