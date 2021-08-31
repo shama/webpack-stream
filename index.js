@@ -125,7 +125,6 @@ module.exports = function (options, wp, done) {
 
       config.entry = config.entry || entry;
       config.output.path = config.output.path || process.cwd();
-      config.watch = options.watch;
       entry = [];
 
       if (!config.entry || config.entry.length < 1) {
