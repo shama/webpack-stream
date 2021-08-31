@@ -83,9 +83,9 @@ To use gulp `watch`, it's required that you explicitly pass webpack in the 2nd a
 Please note that gulp `watch` and webpack `watch` are mutually exclusive.
 
 ```javascript
-var gulp = require('gulp');
-var compiler = require('webpack');
-var webpack = require('webpack-stream');
+const gulp = require('gulp');
+const compiler = require('webpack');
+const webpack = require('webpack-stream');
 
 gulp.task('build', function() {
   return gulp.src('src/entry.js')
