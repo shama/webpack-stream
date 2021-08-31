@@ -8,6 +8,7 @@ gulp.task('default', function () {
   return gulp.src(['test/fixtures/entry.js', 'test/fixtures/anotherentrypoint.js'])
     .pipe(named())
     .pipe(webpack({
+      mode: 'production',
       devtool: 'source-map'
     }))
     .pipe(gulp.dest('tmp/'));

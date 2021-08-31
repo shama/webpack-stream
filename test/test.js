@@ -26,7 +26,7 @@ test('streams output assets', function (t) {
         t.ok(/__webpack_require__/i.test(contents), 'should contain "__webpack_require__"');
         t.ok(/var one = true;/i.test(contents), 'should contain "var one = true;"');
         break;
-      case '0.bundle.js':
+      case 'test_fixtures_chunk_js.bundle.js':
         t.ok(/var chunk = true;/i.test(contents), 'should contain "var chunk = true;"');
         break;
     }
@@ -163,7 +163,7 @@ test('error formatting', function (t) {
   t.plan(2);
   // TODO: Fix this to test to rely less on large string outputs as those can change
   // and still be ok.
-  var expectedMessage = '\x1b[31mError\x1b[39m in plugin "\x1b[36mwebpack-stream\x1b[39m"\nMessage:\n    ./test/fixtures/entry.js\nModule Error (from ./test/fak';
+  var expectedMessage = '\x1b[31mError\x1b[39m in plugin "\x1b[36mwebpack-stream\x1b[39m"\nMessage:\n    Module Error (from ./test/fake-error-loader.js):\nFake ';
   var entry = fs.src('test/fixtures/entry.js');
   var stream = webpack({
     quiet: true,
