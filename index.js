@@ -222,7 +222,7 @@ module.exports = function (options, wp, done) {
       const fs = compiler.outputFileSystem = cache.mfs;
 
       const assetEmittedPlugin = compiler.hooks
-        // Webpack 4
+        // Webpack 4/5
         ? function (callback) { compiler.hooks.assetEmitted.tapAsync('WebpackStream', callback); }
         // Webpack 2/3
         : function (callback) { compiler.plugin('asset-emitted', callback); };
@@ -244,7 +244,7 @@ module.exports = function (options, wp, done) {
 
     if (options.watch && !isSilent) {
       const watchRunPlugin = compiler.hooks
-        // Webpack 4
+        // Webpack 4/5
         ? callback => compiler.hooks.watchRun.tapAsync('WebpackInfo', callback)
         // Webpack 2/3
         : callback => compiler.plugin('watch-run', callback);
