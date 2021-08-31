@@ -40,7 +40,7 @@
   "devDependencies": {
     "gulp": "^4.0.2",
     "rimraf": "^3.0.2",
-    "semistandard": "^14.2.3",
+    "semistandard": "^16.0.1",
     "tape": "^5.0.1",
     "vinyl-fs": "^3.0.2",
     "vinyl-named": "^1.1.0",

@@ -1,15 +1,15 @@
-var test = require('tape');
-var webpack = require('../');
-var path = require('path');
-var fs = require('vinyl-fs');
-var named = require('vinyl-named');
+const test = require('tape');
+const webpack = require('../');
+const path = require('path');
+const fs = require('vinyl-fs');
+const named = require('vinyl-named');
 
-var base = path.resolve(__dirname, 'fixtures');
+const base = path.resolve(__dirname, 'fixtures');
 
 test('streams output assets', function (t) {
   t.plan(3);
-  var entry = fs.src('test/fixtures/entry.js');
-  var stream = webpack({
+  const entry = fs.src('test/fixtures/entry.js');
+  const stream = webpack({
     config: {
       mode: 'development',
       output: {
@@ -19,8 +19,8 @@ test('streams output assets', function (t) {
     quiet: true
   });
   stream.on('data', function (file) {
-    var basename = path.basename(file.path);
-    var contents = file.contents.toString();
+    const basename = path.basename(file.path);
+    const contents = file.contents.toString();
     switch (basename) {
       case 'bundle.js':
         t.ok(/__webpack_require__/i.test(contents), 'should contain "__webpack_require__"');
@@ -36,7 +36,7 @@ test('streams output assets', function (t) {
 
 test('multiple entry points', function (t) {
   t.plan(3);
-  var stream = webpack({
+  const stream = webpack({
     config: {
       mode: 'development',
       entry: {
@@ -50,8 +50,8 @@ test('multiple entry points', function (t) {
     quiet: true
   });
   stream.on('data', function (file) {
-    var basename = path.basename(file.path);
-    var contents = file.contents.toString();
+    const basename = path.basename(file.path);
+    const contents = file.contents.toString();
     switch (basename) {
       case 'one.bundle.js':
         t.ok(/__webpack_require__/i.test(contents), 'should contain "__webpack_require__"');
@@ -67,16 +67,16 @@ test('multiple entry points', function (t) {
 
 test('stream multiple entry points', function (t) {
   t.plan(3);
-  var entries = fs.src(['test/fixtures/entry.js', 'test/fixtures/anotherentrypoint.js']);
-  var stream = webpack({
+  const entries = fs.src(['test/fixtures/entry.js', 'test/fixtures/anotherentrypoint.js']);
+  const stream = webpack({
     config: {
       mode: 'development'
     },
     quiet: true
   });
   stream.on('data', function (file) {
-    var basename = path.basename(file.path);
-    var contents = file.contents.toString();
+    const basename = path.basename(file.path);
+    const contents = file.contents.toString();
     switch (basename) {
       case 'entry.js':
         t.ok(/__webpack_require__/i.test(contents), 'should contain "__webpack_require__"');
@@ -93,12 +93,12 @@ test('stream multiple entry points', function (t) {
 test('empty input stream', function (t) {
   t.plan(1);
 
-  var entry = fs.src('test/path/to/nothing', { allowEmpty: true });
-  var stream = webpack({
+  const entry = fs.src('test/path/to/nothing', { allowEmpty: true });
+  const stream = webpack({
     config: {},
     quiet: true
   });
-  var data = null;
+  let data = null;
 
   stream.on('data', function (file) {
     data = file;
@@ -114,7 +114,7 @@ test('empty input stream', function (t) {
 test('multi-compile', function (t) {
   t.plan(3);
 
-  var stream = webpack({
+  const stream = webpack({
     quiet: true,
     config: [{
       mode: 'development',
@@ -135,8 +135,8 @@ test('multi-compile', function (t) {
     }]
   });
   stream.on('data', function (file) {
-    var basename = path.basename(file.path);
-    var contents = file.contents.toString();
+    const basename = path.basename(file.path);
+    const contents = file.contents.toString();
     switch (basename) {
       case 'one.bundle.js':
         t.ok(/__webpack_require__/i.test(contents), 'should contain "__webpack_require__"');
@@ -152,7 +152,7 @@ test('multi-compile', function (t) {
 
 test('no options', function (t) {
   t.plan(1);
-  var stream = webpack();
+  const stream = webpack();
   stream.on('end', function () {
     t.ok(true, 'ended without error');
   });
@@ -163,9 +163,9 @@ test('error formatting', function (t) {
   t.plan(2);
   // TODO: Fix this to test to rely less on large string outputs as those can change
   // and still be ok.
-  var expectedMessage = '\x1b[31mError\x1b[39m in plugin "\x1b[36mwebpack-stream\x1b[39m"\nMessage:\n    Module Error (from ./test/fake-error-loader.js):\nFake ';
-  var entry = fs.src('test/fixtures/entry.js');
-  var stream = webpack({
+  const expectedMessage = '\x1b[31mError\x1b[39m in plugin "\x1b[36mwebpack-stream\x1b[39m"\nMessage:\n    Module Error (from ./test/fake-error-loader.js):\nFake ';
+  const entry = fs.src('test/fixtures/entry.js');
+  const stream = webpack({
     quiet: true,
     config: {
       module: {
