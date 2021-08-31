@@ -98,7 +98,7 @@ gulp.task('build', function() {
 });
 
 gulp.task('default', ['build'], function() {
-  gulp.watch(['src/**/*.js'], ['build']);
+  gulp.watch(['src/**/*.js'], gulp.series('build'));
 });
 
 ```

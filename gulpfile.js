@@ -15,5 +15,5 @@ gulp.task('default', function () {
 });
 
 gulp.task('watch', function () {
-  gulp.watch('test/fixtures/*.js', ['default']);
+  gulp.watch('test/fixtures/*.js', gulp.series('default'));
 });
