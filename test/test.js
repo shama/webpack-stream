@@ -159,6 +159,18 @@ test('no options', function (t) {
   stream.end();
 });
 
+test('config file path with webpack-stream options', function (t) {
+  t.plan(1);
+  var stream = webpack({
+    quiet: true,
+    config: path.join(base, 'webpack.config.js')
+  });
+  stream.on('end', function () {
+    t.ok(true, 'config successfully loaded from file, with webpack-stream options');
+  });
+  stream.end();
+});
+
 test('error formatting', function (t) {
   t.plan(2);
   // TODO: Fix this to test to rely less on large string outputs as those can change

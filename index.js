@@ -38,6 +38,10 @@ module.exports = function (options, wp, done) {
   const isInWatchMode = !!options.watch;
   delete options.watch;
 
+  if (typeof config === 'string') {
+    config = require(config);
+  }
+
   // Webpack 4 doesn't support the `quiet` attribute, however supports
   // setting `stats` to a string within an array of configurations
   // (errors-only|minimal|none|normal|verbose) or an object with an absurd
