@@ -1,6 +1,6 @@
 {
   "name": "webpack-stream",
-  "version": "6.1.2",
+  "version": "7.0.0",
   "description": "Run webpack as a stream",
   "license": "MIT",
   "homepage": "https://github.com/shama/webpack-stream",
