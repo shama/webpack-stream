@@ -31,7 +31,7 @@ return gulp.src('src/entry.js')
     watch: true,
     module: {
       rules: [
-        { test: /\.css$/, loader: 'style!css' },
+        { test: /\.css$/, use: ['style-loader', 'css-loader'] },
       ],
     },
   }))
