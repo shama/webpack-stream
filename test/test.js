@@ -161,7 +161,7 @@ test('no options', function (t) {
 
 test('config file path with webpack-stream options', function (t) {
   t.plan(1);
-  var stream = webpack({
+  const stream = webpack({
     quiet: true,
     config: path.join(base, 'webpack.config.js')
   });

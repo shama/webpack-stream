@@ -33,7 +33,7 @@ module.exports = function (options, wp, done) {
   };
 
   options = clone(options) || {};
-  const config = options.config || options;
+  let config = options.config || options;
 
   const isInWatchMode = !!options.watch;
   delete options.watch;
