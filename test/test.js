@@ -90,6 +90,28 @@ test('stream multiple entry points', function (t) {
   entries.pipe(named()).pipe(stream);
 });
 
+test('stream multiple entry points, one with two files', function (t) {
+  t.plan(2);
+  var entries = fs.src(['test/fixtures/entry.js', 'test/fixtures/anotherentrypoint.js', 'test/fixtures/subdirectory/entry.js']);
+  var stream = webpack({
+    config: {},
+    quiet: true
+  });
+  stream.on('data', function (file) {
+    var basename = path.basename(file.path);
+    var contents = file.contents.toString();
+    switch (basename) {
+      case 'entry.js':
+        t.ok(/module\.exports = __webpack_require__/i.test(contents), 'should contain "module.exports = __webpack_require__"');
+        break;
+      case 'anotherentrypoint.js':
+        t.notOk(/module\.exports = __webpack_require__/i.test(contents), 'should not contain "module.exports = __webpack_require__"');
+        break;
+    }
+  });
+  entries.pipe(named()).pipe(stream);
+});
+
 test('empty input stream', function (t) {
   t.plan(1);
 
