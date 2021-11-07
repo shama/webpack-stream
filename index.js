@@ -190,12 +190,28 @@ module.exports = function (options, wp, done) {
         }
         self.emit('compilation-error', compilationError);
       }
-      if (!isInWatchMode) {
-        self.queue(null);
-      }
-      done(err, stats);
-      if (isInWatchMode && !isSilent) {
-        fancyLog('webpack is watching for changes');
+      if (isInWatchMode) {
+        done(err, stats);
+        if (!isSilent) {
+          fancyLog('webpack is watching for changes');
+        }
+      } else {
+        function closeStream() {
+          self.queue(null);
+          done(err, stats);
+        }
+
+        if (compiler.close) {
+          // For Webpack v5 and above:
+          // From https://webpack.js.org/api/node/#run: we need to close
+          // the compiler so that low-priority (e.g., caching) work happens
+          compiler.close(closeStream);
+        } else {
+          // Webpack v4 doesn't have compiler.close, so just immediately end
+          // the stream
+          // (see https://github.com/webpack/webpack/blob/v4.0.0/lib/Compiler.js)
+          closeStream();
+        }
       }
     };
 
