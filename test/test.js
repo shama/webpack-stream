@@ -3,6 +3,7 @@ const webpack = require('../');
 const path = require('path');
 const fs = require('vinyl-fs');
 const named = require('vinyl-named');
+const nodeFS = require('fs');
 
 const base = path.resolve(__dirname, 'fixtures');
 
@@ -93,7 +94,7 @@ test('stream multiple entry points', function (t) {
 test('empty input stream', function (t) {
   t.plan(1);
 
-  const entry = fs.src('test/path/to/nothing', { allowEmpty: true });
+  const entry = fs.src('test/path/to/nothing', {allowEmpty: true});
   const stream = webpack({
     config: {},
     quiet: true
@@ -197,5 +198,34 @@ test('error formatting', function (t) {
   stream.on('compilation-error', function (err) {
     t.equal(err.toString().slice(0, expectedMessage.length), expectedMessage, 'compilation-error message');
   });
+  entry.pipe(stream);
+});
+
+test('writes filesystem cache files', function (t) {
+  t.plan(2);
+  const entry = fs.src('test/fixtures/entry.js');
+  const cacheDirectory = path.join(__dirname, 'testCache');
+
+  nodeFS.rmdirSync(cacheDirectory, {recursive: true, force: true});
+  t.equal(nodeFS.existsSync(cacheDirectory), false, 'cache directory should not exist at start');
+
+  const stream = webpack({
+    config: {
+      mode: 'development',
+      output: {filename: 'bundle.js'},
+      cache: {
+        type: 'filesystem',
+        idleTimeoutForInitialStore: 0,
+        cacheDirectory
+      },
+    },
+    quiet: true
+  });
+
+  stream.on('end', function () {
+    t.equal(nodeFS.existsSync(cacheDirectory), true, 'should have created a cache directory after compile');
+    nodeFS.rmdirSync(cacheDirectory, {recursive: true, force: true});
+  });
+
   entry.pipe(stream);
 });
